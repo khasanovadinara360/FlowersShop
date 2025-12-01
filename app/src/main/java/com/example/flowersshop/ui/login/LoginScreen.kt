@@ -92,6 +92,7 @@ fun LoginScreen(navController: NavController, viewModel: LoginViewModel = hiltVi
                     unfocusedIndicatorColor = Color.Transparent,
                 )
             )
+
             Text(
                 "Забыли пароль?", fontSize = 11.sp,
                 fontFamily = fonts,
