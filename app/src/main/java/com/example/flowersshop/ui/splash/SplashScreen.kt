@@ -1,0 +1,82 @@
+package com.example.flowersshop.ui.splash
+
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
+import androidx.compose.material3.Icon
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ImageBitmap
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
+import com.example.flowersshop.R
+import com.example.flowersshop.ui.Route
+
+@Composable
+fun SplashScreen(navController: NavController, viewModel: SplashViewModel = hiltViewModel()) {
+    val state = viewModel.state.value
+    LaunchedEffect(state.isTimeOut) {
+        if (state.isTimeOut) {
+            navController.navigate(Route.Onb.route)
+        }
+
+    }
+    val fonts = FontFamily(
+        Font(R.font.wmd_r, FontWeight.Normal),
+    )
+    val fonts2 = FontFamily(
+        Font(R.font.ws_r, FontWeight.Normal),
+    )
+    Box(modifier = Modifier.fillMaxSize()) {
+        Image(
+            painter = painterResource(R.drawable.splash),
+            "splash",
+            modifier = Modifier.fillMaxSize(),
+            contentScale = ContentScale.FillBounds
+        )
+        Column(
+            modifier = Modifier
+                .align(Alignment.Center)
+                .width(IntrinsicSize.Max),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Image(
+                painter = painterResource(R.drawable.flower),
+                "flower",
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 25.dp),
+                contentScale = ContentScale.FillWidth
+            )
+            Text(
+                "DaliAnge",
+                fontFamily = fonts,
+                fontWeight = FontWeight.Normal,
+                fontSize = 32.sp,
+                color = Color.Black
+            )
+            Text("Flowers",
+                fontFamily = fonts2,
+                fontWeight = FontWeight.Normal,
+                fontSize = 15.sp,
+                color = Color.Black)
+        }
+    }
+}
