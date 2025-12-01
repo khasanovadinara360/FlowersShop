@@ -9,8 +9,13 @@ import androidx.compose.ui.unit.sp
 import com.example.flowersshop.R
 
 // Set of Material typography styles to start with
+
+
 val fonts = FontFamily(
     Font(R.font.wmd_r, FontWeight.Normal),
+)
+val fonts2 = FontFamily(
+    Font(R.font.ws_r, FontWeight.Normal),
 )
 val Typography = Typography(
     bodyLarge = TextStyle(

@@ -28,6 +28,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.flowersshop.R
 import com.example.flowersshop.ui.Route
+import com.example.flowersshop.ui.theme.fonts
+import com.example.flowersshop.ui.theme.fonts2
 
 @Composable
 fun SplashScreen(navController: NavController, viewModel: SplashViewModel = hiltViewModel()) {
@@ -38,12 +40,6 @@ fun SplashScreen(navController: NavController, viewModel: SplashViewModel = hilt
         }
 
     }
-    val fonts = FontFamily(
-        Font(R.font.wmd_r, FontWeight.Normal),
-    )
-    val fonts2 = FontFamily(
-        Font(R.font.ws_r, FontWeight.Normal),
-    )
     Box(modifier = Modifier.fillMaxSize()) {
         Image(
             painter = painterResource(R.drawable.splash),

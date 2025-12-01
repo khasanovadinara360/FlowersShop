@@ -7,10 +7,8 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -24,11 +22,11 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.LineHeightStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.flowersshop.R
+import com.example.flowersshop.ui.Route
 import com.example.flowersshop.ui.theme.fonts
 
 data class Onb(
@@ -86,12 +84,14 @@ fun OnbScreen(navController: NavController) {
     ) {
         Image(
             painter = painterResource(onbs[i.value].image), "onb",
-            modifier = Modifier.fillMaxSize(),
-            contentScale = ContentScale.FillBounds
+            modifier = Modifier.fillMaxWidth(),
+            contentScale = ContentScale.FillWidth
         )
 
         Column(
-            modifier = Modifier.fillMaxSize().padding (20.dp)
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(20.dp)
         ) {
 
             Text(
@@ -117,14 +117,17 @@ fun OnbScreen(navController: NavController) {
                 fontWeight = FontWeight.Normal,
                 color = onbs[i.value].desc.second
             )
-//            Button(onClick = { i.value++ }, modifier = Modifier.align(Alignment.End), colors = ButtonDefaults.buttonColors(contentColor = Color.Transparent)) {
-                Icon(
-                    imageVector = ImageVector.vectorResource(R.drawable.next),
-                    "next",
-                    tint = onbs[i.value].color,
-                    modifier = Modifier.clickable{i.value += 1}.align(Alignment.End)
-                )
-//            }
+            Icon(
+                imageVector = ImageVector.vectorResource(R.drawable.next),
+                "next",
+                tint = onbs[i.value].color,
+                modifier = Modifier
+                    .clickable {
+                        if (i.value == 3) navController.navigate(Route.Login.route)
+                        i.value += 1
+                    }
+                    .align(Alignment.End)
+            )
         }
     }
 }

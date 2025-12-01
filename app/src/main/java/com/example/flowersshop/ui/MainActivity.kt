@@ -14,6 +14,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.flowersshop.ui.cart.CartScreen
 import com.example.flowersshop.ui.components.BottomNav
+import com.example.flowersshop.ui.login.LoginScreen
 import com.example.flowersshop.ui.main.MainScreen
 import com.example.flowersshop.ui.onb.OnbScreen
 import com.example.flowersshop.ui.profile.ProfileScreen
@@ -27,6 +28,7 @@ sealed class Route(val route: String) {
     data object Cart : Route("cart")
     data object Profile : Route("profile")
     data object Onb : Route("onb")
+    data object Login : Route("login")
 }
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -47,7 +49,7 @@ class MainActivity : ComponentActivity() {
                 ) { innerPadding ->
                     NavHost(
                         navController = navController,
-                        startDestination = Route.Splash.route,
+                        startDestination = Route.Login.route,
                         modifier = Modifier.Companion
                             .padding(innerPadding)
                     ) {
@@ -66,6 +68,9 @@ class MainActivity : ComponentActivity() {
                         }
                         composable(Route.Onb.route) {
                             OnbScreen(navController)
+                        }
+                        composable(Route.Login.route) {
+                            LoginScreen(navController)
                         }
                     }
                 }
