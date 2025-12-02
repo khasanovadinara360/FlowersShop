@@ -1,4 +1,4 @@
-package com.example.flowersshop.ui
+package com.example.flowersshop.ui.components
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material3.Text

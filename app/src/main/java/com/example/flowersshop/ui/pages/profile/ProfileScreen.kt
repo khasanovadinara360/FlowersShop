@@ -1,4 +1,4 @@
-package com.example.flowersshop.ui.cart
+package com.example.flowersshop.ui.pages.profile
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -7,9 +7,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
 
-
 @Composable
-fun CartScreen(navController: NavController) {
+fun ProfileScreen(navController: NavController) {
 
     Column(modifier = Modifier.fillMaxSize()) {
         Text("Main screen", modifier = Modifier.weight(1f))

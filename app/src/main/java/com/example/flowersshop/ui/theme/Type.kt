@@ -17,6 +17,12 @@ val fonts = FontFamily(
 val fonts2 = FontFamily(
     Font(R.font.ws_r, FontWeight.Normal),
 )
+val fonts3 = FontFamily(
+    Font(R.font.pd_r, FontWeight.Normal),
+)
+val fonts4 = FontFamily(
+    Font(R.font.ct_r, FontWeight.Normal),
+)
 val Typography = Typography(
     bodyLarge = TextStyle(
         fontFamily = fonts,
