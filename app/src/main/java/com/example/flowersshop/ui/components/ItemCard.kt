@@ -18,17 +18,20 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import coil.compose.AsyncImage
+import coil.request.ImageRequest
 import com.example.flowersshop.R
 import com.example.flowersshop.ui.pages.bouquet.BouquetViewModel
 import com.example.flowersshop.ui.theme.fonts3
 
 @Composable
-fun ItemCard(image: Int, title: String, coast: Long, action: Unit) {
+fun ItemCard(imageUrl: String, title: String, coast: Long, action: Unit) {
     Column(
         modifier = Modifier
             .clip(RoundedCornerShape(26.dp))
@@ -38,14 +41,25 @@ fun ItemCard(image: Int, title: String, coast: Long, action: Unit) {
             }
             .padding( 5.dp)
     ) {
-        Image(
-            painter = painterResource(image),
-            "flower",
+        AsyncImage(
+            model = ImageRequest.Builder(LocalContext.current)
+                .data(imageUrl)
+                .crossfade(true)
+                .build(),
+            contentDescription = "item",
             contentScale = ContentScale.FillWidth,
-            modifier = Modifier
-                .fillMaxWidth()
-                .clip(RoundedCornerShape(21.dp))
+            placeholder = painterResource(R.drawable.placeholder),
+            error = painterResource(R.drawable.login),
+            modifier = Modifier.fillMaxWidth().clip(RoundedCornerShape(21.dp))
         )
+//        Image(
+//            painter = painterResource(image),
+//            "flower",
+//            contentScale = ContentScale.FillWidth,
+//            modifier = Modifier
+//                .fillMaxWidth()
+//                .clip(RoundedCornerShape(21.dp))
+//        )
         Column(
             modifier = Modifier.padding(horizontal = 10.dp, vertical = 15.dp),
             verticalArrangement = Arrangement.spacedBy(15.dp)

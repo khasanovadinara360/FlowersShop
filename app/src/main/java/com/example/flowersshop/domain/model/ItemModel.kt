@@ -5,4 +5,5 @@ data class ItemModel(
     val category: String,
     val title: String,
     val coast: Long,
+    val imageUrl: String,
 )

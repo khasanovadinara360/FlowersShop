@@ -42,52 +42,57 @@ data class Item(
 data class Page(
     val num: String,
     val title: String,
-    val items: List<Item>? = null,
+    val category: String? = null
+//    val items: List<Item>? = null,
 )
 
 
 @Composable
 fun BouquetScreen(navController: NavController, viewModel: BouquetViewModel = hiltViewModel()) {
     val state = viewModel.state.value
-    val page = remember { mutableStateOf(0) }
+//    val page = remember { mutableStateOf(0) }
     val items = listOf(
         Page(
-            "01", "Выберите цветок", listOf(
+            "01", "Выберите цветок", "flowers"
+            //listOf(
 //                R.drawable.flower1,
 //                R.drawable.flower2,
 //                R.drawable.flower3,
 //                R.drawable.flower4,
-                Item(R.drawable.flower1, state.flowers[0].title, state.flowers[0].coast),
-                Item(R.drawable.flower2, state.flowers[1].title, state.flowers[1].coast),
-                Item(R.drawable.flower3, state.flowers[2].title, state.flowers[2].coast),
-                Item(R.drawable.flower4, state.flowers[3].title, state.flowers[3].coast),
-            )
+//                Item(R.drawable.flower1, state.flowers[0].title, state.flowers[0].coast),
+//                Item(R.drawable.flower2, state.flowers[1].title, state.flowers[1].coast),
+//                Item(R.drawable.flower3, state.flowers[2].title, state.flowers[2].coast),
+//                Item(R.drawable.flower4, state.flowers[3].title, state.flowers[3].coast),
+            // )
         ),
         Page(
-            "02", "Выберите зелень", listOf(
-
-                Item(R.drawable.green1, state.greens[0].title, state.greens[0].coast),
-                Item(R.drawable.green2, state.greens[1].title, state.greens[1].coast),
-                Item(R.drawable.green3, state.greens[2].title, state.greens[2].coast),
-                Item(R.drawable.green4, state.greens[3].title, state.greens[3].coast),
-            )
+            "02", "Выберите зелень", "greens"
+//            listOf(
+//
+//                Item(R.drawable.green1, state.greens[0].title, state.greens[0].coast),
+//                Item(R.drawable.green2, state.greens[1].title, state.greens[1].coast),
+//                Item(R.drawable.green3, state.greens[2].title, state.greens[2].coast),
+//                Item(R.drawable.green4, state.greens[3].title, state.greens[3].coast),
+//            )
         ),
         Page(
-            "03", "Выберите упаковку", listOf(
-
-                Item(R.drawable.pack1, state.packs[0].title, state.packs[0].coast),
-                Item(R.drawable.pack2, state.packs[1].title, state.packs[1].coast),
-                Item(R.drawable.pack3, state.packs[2].title, state.packs[2].coast),
-                Item(R.drawable.pack4, state.packs[3].title, state.packs[3].coast),
-            )
+            "03", "Выберите упаковку", "packs"
+//            listOf(
+//
+////                Item(R.drawable.pack1, state.packs[0].title, state.packs[0].coast),
+////                Item(R.drawable.pack2, state.packs[1].title, state.packs[1].coast),
+////                Item(R.drawable.pack3, state.packs[2].title, state.packs[2].coast),
+////                Item(R.drawable.pack4, state.packs[3].title, state.packs[3].coast),
+//            )
         ),
         Page(
-            "04", "Выберите открытку", listOf(
-                Item(R.drawable.card1, state.cards[0].title, state.cards[0].coast),
-                Item(R.drawable.card2, state.cards[1].title, state.cards[1].coast),
-                Item(R.drawable.card3, state.cards[2].title, state.cards[2].coast),
-                Item(R.drawable.card4, state.cards[3].title, state.cards[3].coast),
-            )
+            "04", "Выберите открытку", "cards"
+//            listOf(
+////                Item(R.drawable.card1, state.cards[0].title, state.cards[0].coast),
+////                Item(R.drawable.card2, state.cards[1].title, state.cards[1].coast),
+////                Item(R.drawable.card3, state.cards[2].title, state.cards[2].coast),
+////                Item(R.drawable.card4, state.cards[3].title, state.cards[3].coast),
+//            )
         ),
         Page(
             "05", "Итого"
@@ -108,14 +113,14 @@ fun BouquetScreen(navController: NavController, viewModel: BouquetViewModel = hi
         ) {
             Spacer(Modifier.width(10.dp))
             Text(
-                items[page.value].num,
+                items[state.page].num,
                 fontSize = 64.sp,
                 fontFamily = fonts4,
                 color = Color(0xFF732C2C),
 
                 )
             Text(
-                items[page.value].title,
+                items[state.page].title,
                 fontSize = 20.sp,
                 fontFamily = fonts3,
                 color = Color(0xFFA27474),
@@ -123,8 +128,8 @@ fun BouquetScreen(navController: NavController, viewModel: BouquetViewModel = hi
                 textAlign = TextAlign.Center
             )
         }
-        if (page.value < 4) {
-            val item = items[page.value].items
+        if (state.page < 4) {
+//            val item = items[page.value].items
             if (state.isLoading) {
                 Text("Загрузка")
             } else {
@@ -133,31 +138,50 @@ fun BouquetScreen(navController: NavController, viewModel: BouquetViewModel = hi
                     verticalArrangement = Arrangement.spacedBy(15.dp),
                     horizontalArrangement = Arrangement.spacedBy(15.dp)
                 ) {
-                    items(item!!) { i ->
-                        ItemCard(
-                            i.image, i.title, i.coast,
-                            action = when (items[page.value].num) {
-                                "01" -> {
-                                    viewModel.onEvent(BouquetEvents.OnFlowerClick(i.title))
-                                }
-
-                                "02" -> {
-                                    viewModel.onEvent(BouquetEvents.OnGreenClick(i.title))
-                                }
-
-                                "03" -> {
-                                    viewModel.onEvent(BouquetEvents.OnPackClick(i.title))
-                                }
-
-                                "04" -> {
-                                    viewModel.onEvent(BouquetEvents.OnCardClick(i.title))
-                                }
-
-                                else -> {
-
-                                }
+                    when (items[state.page].category) {
+                        "flowers" -> {
+                            items(state.flowers) { i ->
+                                ItemCard(
+                                    i.imageUrl, i.title, i.coast,
+                                    action = viewModel.onEvent(BouquetEvents.OnFlowerClick(i))
+                                )
                             }
-                        )
+                        }
+
+
+                        "greens" -> {
+                            items(state.greens) { i ->
+                                ItemCard(
+                                    i.imageUrl, i.title, i.coast,
+                                    action = viewModel.onEvent(BouquetEvents.OnGreenClick(i))
+                                )
+                            }
+                        }
+
+
+                        "packs" -> {
+                            items(state.packs) { i ->
+                                ItemCard(
+                                    i.imageUrl, i.title, i.coast,
+                                    action = viewModel.onEvent(BouquetEvents.OnPackClick(i))
+                                )
+                            }
+                        }
+
+
+                        "cards" -> {
+                            items(state.cards) { i ->
+                                ItemCard(
+                                    i.imageUrl, i.title, i.coast,
+                                    action = viewModel.onEvent(BouquetEvents.OnCardClick(i))
+                                )
+                            }
+                        }
+
+
+                        else -> {
+
+                        }
                     }
                 }
             }
@@ -167,7 +191,7 @@ fun BouquetScreen(navController: NavController, viewModel: BouquetViewModel = hi
                     val page = items[i]
                     Row() {
                         Text((i + 1).toString())
-                        Text(state.flower)
+//                        Text(state.flower)
 //                        Row() {
 //                            Icon()
 //                            Text("0")

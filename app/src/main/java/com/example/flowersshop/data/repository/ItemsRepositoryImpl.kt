@@ -19,20 +19,18 @@ class ItemsRepositoryImpl: ItemsRepository {
     }
 
     override suspend fun getItemsByCategory(category: String): List<ItemModel> {
-        try {
-            val list = client.postgrest["items"].select {
+        return try {
+            client.postgrest["items"].select {
                 filter {
                     eq("category", category)
                 }
             }.decodeList<ItemModelDto>()
-            val listItems = mutableListOf<ItemModel>()
-            list.forEach { i ->
-                listItems.add(i.toDomain())
-            }
-            return listItems
+                .map { it.toDomain() }
+
+
         } catch (e: Exception) {
             Log.e("HUETA", "Error", e)
-            return emptyList()
+            emptyList()
         }
     }
 }

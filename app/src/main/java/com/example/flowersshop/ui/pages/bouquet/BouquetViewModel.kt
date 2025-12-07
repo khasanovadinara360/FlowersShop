@@ -20,22 +20,22 @@ class BouquetViewModel @Inject constructor(
     val state: State<BouquetState> = _state
 
     init {
-        viewModelScope.launch(Dispatchers.IO) {
-            loadItems()
-        }
+        loadItems()
     }
-    suspend fun loadItems() {
-        val flowers = getItemsByCategory.execute("flowers")
-        val greens = getItemsByCategory.execute("greens")
-        val packs = getItemsByCategory.execute("packs")
-        val cards = getItemsByCategory.execute("cards")
-        _state.value = _state.value.copy(
-            flowers = flowers,
-            greens = greens,
-            packs = packs,
-            cards = cards,
-            isLoading = false
-        )
+    fun loadItems() {
+        viewModelScope.launch(Dispatchers.IO) {
+            val flowers = getItemsByCategory.execute("flowers")
+            val greens = getItemsByCategory.execute("greens")
+            val packs = getItemsByCategory.execute("packs")
+            val cards = getItemsByCategory.execute("cards")
+            _state.value = _state.value.copy(
+                flowers = flowers,
+                greens = greens,
+                packs = packs,
+                cards = cards,
+                isLoading = false
+            )
+        }
     }
 
     fun onEvent(event: BouquetEvents) {

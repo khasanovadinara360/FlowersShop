@@ -7,9 +7,10 @@ data class ItemModelDto(
     val id: String,
     val title: String,
     val coast: Long,
-    val category: String
+    val category: String,
+    val imageUrl: String,
 )
 
 fun ItemModelDto.toDomain(): ItemModel =
-    ItemModel(id = id, category = category, title = title, coast = coast)
+    ItemModel(id = id, category = category, title = title, coast = coast, imageUrl = imageUrl)
 

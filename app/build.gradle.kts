@@ -5,6 +5,7 @@ plugins {
 
     alias { libs.plugins.ksp }
     alias { libs.plugins.hilt }
+    alias { libs.plugins.serialization }
 
 }
 
@@ -51,15 +52,14 @@ dependencies {
     implementation("io.github.jan-tennert.supabase:realtime-kt:2.5.1")
 
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.9.0")
-
-    // Если используешь Ktor (например, для запросов через Supabase SDK)
-    implementation("io.ktor:ktor-client-android:3.0.0")
-
-
+// Ktor
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.8.7")
 
+    implementation("io.ktor:ktor-client-okhttp:2.3.8")
 
     implementation("io.coil-kt:coil-compose:2.7.0")
+//    implementation(libs.ktor.client.core)
+//    implementation(libs.ktor.client.cio)
 
 
     implementation(libs.hilt.navigation)

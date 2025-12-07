@@ -3,10 +3,10 @@ package com.example.flowersshop.ui.pages.bouquet
 import com.example.flowersshop.domain.model.ItemModel
 
 data class BouquetState(
-    val flower: String = "",
-    val green: String = "",
-    val pack: String = "",
-    val card: String = "",
+    val flower: ItemModel? = null,
+    val green: ItemModel? = null,
+    val pack: ItemModel? = null,
+    val card: ItemModel? = null,
     val page: Int = 0,
     val coast: Int = 0,
     val flowers: List<ItemModel> = emptyList(),
