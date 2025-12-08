@@ -8,6 +8,7 @@ import com.example.flowersshop.domain.usecase.GetItemsByCategory
 import com.example.flowersshop.domain.usecase.GetItemsUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -15,13 +16,14 @@ import javax.inject.Inject
 class BouquetViewModel @Inject constructor(
     private val getItems: GetItemsUseCase,
     private val getItemsByCategory: GetItemsByCategory
-): ViewModel() {
+) : ViewModel() {
     private val _state = mutableStateOf(BouquetState())
     val state: State<BouquetState> = _state
 
     init {
         loadItems()
     }
+
     fun loadItems() {
         viewModelScope.launch(Dispatchers.IO) {
             val flowers = getItemsByCategory.execute("flowers")
@@ -44,20 +46,24 @@ class BouquetViewModel @Inject constructor(
                 _state.value = _state.value.copy(
                     flower = event.value,
                     page = _state.value.page + 1
+
                 )
             }
+
             is BouquetEvents.OnGreenClick -> {
                 _state.value = _state.value.copy(
                     green = event.value,
                     page = _state.value.page + 1
                 )
             }
+
             is BouquetEvents.OnPackClick -> {
                 _state.value = _state.value.copy(
                     pack = event.value,
                     page = _state.value.page + 1
                 )
             }
+
             is BouquetEvents.OnCardClick -> {
                 _state.value = _state.value.copy(
                     card = event.value,

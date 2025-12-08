@@ -143,17 +143,15 @@ fun BouquetScreen(navController: NavController, viewModel: BouquetViewModel = hi
                             items(state.flowers) { i ->
                                 ItemCard(
                                     i.imageUrl, i.title, i.coast,
-                                    action = viewModel.onEvent(BouquetEvents.OnFlowerClick(i))
+                                    action = { viewModel.onEvent(BouquetEvents.OnFlowerClick(i)) }
                                 )
                             }
                         }
-
-
                         "greens" -> {
                             items(state.greens) { i ->
                                 ItemCard(
                                     i.imageUrl, i.title, i.coast,
-                                    action = viewModel.onEvent(BouquetEvents.OnGreenClick(i))
+                                    action = { viewModel.onEvent(BouquetEvents.OnGreenClick(i))}
                                 )
                             }
                         }
@@ -163,7 +161,7 @@ fun BouquetScreen(navController: NavController, viewModel: BouquetViewModel = hi
                             items(state.packs) { i ->
                                 ItemCard(
                                     i.imageUrl, i.title, i.coast,
-                                    action = viewModel.onEvent(BouquetEvents.OnPackClick(i))
+                                    action = {viewModel.onEvent(BouquetEvents.OnPackClick(i))}
                                 )
                             }
                         }
@@ -173,12 +171,10 @@ fun BouquetScreen(navController: NavController, viewModel: BouquetViewModel = hi
                             items(state.cards) { i ->
                                 ItemCard(
                                     i.imageUrl, i.title, i.coast,
-                                    action = viewModel.onEvent(BouquetEvents.OnCardClick(i))
+                                    action = {viewModel.onEvent(BouquetEvents.OnCardClick(i))}
                                 )
                             }
                         }
-
-
                         else -> {
 
                         }

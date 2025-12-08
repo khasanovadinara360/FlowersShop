@@ -31,13 +31,13 @@ import com.example.flowersshop.ui.pages.bouquet.BouquetViewModel
 import com.example.flowersshop.ui.theme.fonts3
 
 @Composable
-fun ItemCard(imageUrl: String, title: String, coast: Long, action: Unit) {
+fun ItemCard(imageUrl: String, title: String, coast: Long, action: () -> Unit) {
     Column(
         modifier = Modifier
             .clip(RoundedCornerShape(26.dp))
             .background(Color(0xFFD9D9D9))
-            .clickable{
-                action
+            .clickable {
+                action()
             }
             .padding( 5.dp)
     ) {
