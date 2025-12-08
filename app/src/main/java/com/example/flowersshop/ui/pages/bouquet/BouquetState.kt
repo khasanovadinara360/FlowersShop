@@ -7,12 +7,18 @@ data class BouquetState(
     val green: ItemModel? = null,
     val pack: ItemModel? = null,
     val card: ItemModel? = null,
+
     val page: Int = 0,
-    val coast: Int = 0,
+    val coast: Long = 0,
+
     val flowers: List<ItemModel> = emptyList(),
+    val flowersCount: Int = 1,
     val greens: List<ItemModel> = emptyList(),
+    val greensCount: Int = 1,
     val packs: List<ItemModel> = emptyList(),
+    val packsCount: Int = 1,
     val cards: List<ItemModel> = emptyList(),
+    val cardsCount: Int = 1,
     val items: List<ItemModel> = emptyList(),
     val isLoading: Boolean = true
 )

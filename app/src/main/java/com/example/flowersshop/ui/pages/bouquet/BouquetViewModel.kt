@@ -44,7 +44,9 @@ class BouquetViewModel @Inject constructor(
         when (event) {
             is BouquetEvents.OnFlowerClick -> {
                 _state.value = _state.value.copy(
-                    flower = event.value,
+//                    flower = event.value,
+                    items = _state.value.items + event.value,
+                    coast = _state.value.coast + event.value.coast,
                     page = _state.value.page + 1
 
                 )
@@ -52,23 +54,104 @@ class BouquetViewModel @Inject constructor(
 
             is BouquetEvents.OnGreenClick -> {
                 _state.value = _state.value.copy(
-                    green = event.value,
+//                    green = event.value,
+                    items = _state.value.items + event.value,
+                    coast = _state.value.coast + event.value.coast,
                     page = _state.value.page + 1
                 )
             }
 
             is BouquetEvents.OnPackClick -> {
                 _state.value = _state.value.copy(
-                    pack = event.value,
+//                    pack = event.value,
+                    items = _state.value.items + event.value,
+                    coast = _state.value.coast + event.value.coast,
                     page = _state.value.page + 1
                 )
             }
 
             is BouquetEvents.OnCardClick -> {
                 _state.value = _state.value.copy(
-                    card = event.value,
+//                    card = event.value,
+                    items = _state.value.items + event.value,
+                    coast = _state.value.coast + event.value.coast,
                     page = _state.value.page + 1
                 )
+            }
+
+            is BouquetEvents.OnAddItemClick -> {
+                when (event.item.category) {
+                    "flowers" -> {
+                        _state.value = _state.value.copy(
+                            flowersCount = _state.value.flowersCount + 1,
+                            coast = _state.value.coast + event.item.coast * _state.value.flowersCount
+                        )
+                    }
+
+                    "greens" -> {
+                        _state.value = _state.value.copy(
+                            greensCount = _state.value.greensCount + 1,
+                            coast = _state.value.coast + event.item.coast * _state.value.greensCount
+                        )
+                    }
+
+                    "packs" -> {
+                        _state.value = _state.value.copy(
+                            packsCount = _state.value.packsCount + 1,
+                            coast = _state.value.coast + event.item.coast * _state.value.packsCount
+                        )
+                    }
+
+                    "cards" -> {
+                        _state.value = _state.value.copy(
+                            cardsCount = _state.value.cardsCount + 1,
+                            coast = _state.value.coast + event.item.coast * _state.value.cardsCount
+                        )
+                    }
+                }
+            }
+
+            is BouquetEvents.OnDelItemClick -> {
+                when (event.item.category) {
+                    "flowers" -> {
+                        if (_state.value.flowersCount > 1) {
+                            _state.value = _state.value.copy(
+                                flowersCount = _state.value.flowersCount - 1,
+                                coast = _state.value.coast + event.item.coast * _state.value.flowersCount
+                            )
+                        }
+                    }
+
+                    "greens" -> {
+                        if (_state.value.greensCount > 1) {
+                            _state.value = _state.value.copy(
+                                greensCount = _state.value.greensCount - 1,
+                                coast = _state.value.coast + event.item.coast * _state.value.greensCount
+
+                            )
+                        }
+                    }
+
+                    "packs" -> {
+                        if (_state.value.packsCount > 1) {
+                            _state.value = _state.value.copy(
+                                packsCount = _state.value.packsCount - 1,
+                                coast = _state.value.coast + event.item.coast * _state.value.packsCount
+
+                            )
+                        }
+                    }
+
+                    "cards" -> {
+                        if (_state.value.cardsCount > 1) {
+                            _state.value = _state.value.copy(
+                                cardsCount = _state.value.cardsCount - 1,
+                                coast = _state.value.coast + event.item.coast * _state.value.cardsCount
+
+                            )
+                        }
+                    }
+                }
             }
         }
     }

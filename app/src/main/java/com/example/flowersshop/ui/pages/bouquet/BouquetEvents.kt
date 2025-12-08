@@ -8,4 +8,6 @@ interface BouquetEvents {
     data class OnPackClick(val value: ItemModel) : BouquetEvents
     data class OnCardClick(val value: ItemModel) : BouquetEvents
     data object OnNextPageClick : BouquetEvents
+    data class OnDelItemClick(val item: ItemModel): BouquetEvents
+    data class OnAddItemClick(val item: ItemModel): BouquetEvents
 }

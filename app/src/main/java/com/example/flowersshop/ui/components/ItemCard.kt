@@ -6,6 +6,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -31,7 +32,7 @@ import com.example.flowersshop.ui.pages.bouquet.BouquetViewModel
 import com.example.flowersshop.ui.theme.fonts3
 
 @Composable
-fun ItemCard(imageUrl: String, title: String, coast: Long, action: () -> Unit) {
+fun ItemCard(imageUrl: String, title: String, coast: Long, action: () -> Unit = {}) {
     Column(
         modifier = Modifier
             .clip(RoundedCornerShape(26.dp))
@@ -50,16 +51,8 @@ fun ItemCard(imageUrl: String, title: String, coast: Long, action: () -> Unit) {
             contentScale = ContentScale.FillWidth,
             placeholder = painterResource(R.drawable.placeholder),
             error = painterResource(R.drawable.login),
-            modifier = Modifier.fillMaxWidth().clip(RoundedCornerShape(21.dp))
+            modifier = Modifier.heightIn(158.dp).fillMaxWidth().clip(RoundedCornerShape(21.dp))
         )
-//        Image(
-//            painter = painterResource(image),
-//            "flower",
-//            contentScale = ContentScale.FillWidth,
-//            modifier = Modifier
-//                .fillMaxWidth()
-//                .clip(RoundedCornerShape(21.dp))
-//        )
         Column(
             modifier = Modifier.padding(horizontal = 10.dp, vertical = 15.dp),
             verticalArrangement = Arrangement.spacedBy(15.dp)
@@ -73,5 +66,5 @@ fun ItemCard(imageUrl: String, title: String, coast: Long, action: () -> Unit) {
 @Preview
 @Composable
 fun ItemCardPrev() {
-    //ItemCard(R.drawable.flower1, "Раникулюнкус", 200)
+    ItemCard("",  "Раникулюнкус", 200L, {})
 }
