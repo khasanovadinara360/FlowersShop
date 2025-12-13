@@ -32,7 +32,7 @@ import com.example.flowersshop.ui.pages.bouquet.BouquetViewModel
 import com.example.flowersshop.ui.theme.fonts3
 
 @Composable
-fun ItemCard(imageUrl: String, title: String, coast: Long, action: () -> Unit = {}) {
+fun ItemCard(imageUrl: String, title: String, coast: Long, action: () -> Unit = {}, iconFav: Boolean = false) {
     Column(
         modifier = Modifier
             .clip(RoundedCornerShape(26.dp))

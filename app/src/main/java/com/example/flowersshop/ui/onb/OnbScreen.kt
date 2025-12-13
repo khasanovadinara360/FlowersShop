@@ -123,8 +123,8 @@ fun OnbScreen(navController: NavController) {
                 tint = onbs[i.value].color,
                 modifier = Modifier
                     .clickable {
-                        if (i.value == 3) navController.navigate(Route.Login.route)
-                        i.value += 1
+                        if (i.value == 2) navController.navigate(Route.Main.route)
+                        else i.value += 1
                     }
                     .align(Alignment.End)
             )

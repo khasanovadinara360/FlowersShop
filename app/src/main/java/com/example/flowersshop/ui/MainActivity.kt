@@ -60,7 +60,7 @@ class MainActivity : ComponentActivity() {
                 BouquetModel("1", "https://usbtrvwvcopzwhjczmzh.supabase.co/storage/v1/object/public/bouquets/bouquet1.png", "Букет 1", 1000),
                 BouquetModel("2", "https://usbtrvwvcopzwhjczmzh.supabase.co/storage/v1/object/public/bouquets/bouquet2.png", "Букет 2", 2000),
                 BouquetModel("3", "https://usbtrvwvcopzwhjczmzh.supabase.co/storage/v1/object/public/bouquets/bouquet3.png", "Букет 3", 3000),
-//                BouquetModel("1", "https://usbtrvwvcopzwhjczmzh.supabase.co/storage/v1/object/public/bouquets/bouquet4.png", "Букет 4", 4000),
+                BouquetModel("4", "https://usbtrvwvcopzwhjczmzh.supabase.co/storage/v1/object/public/bouquets/bouquet4.png", "Букет 4", 4000),
             )
             FlowersShopTheme(dynamicColor = false) {
                 Scaffold(
@@ -81,7 +81,7 @@ class MainActivity : ComponentActivity() {
                 ) { innerPadding ->
                     NavHost(
                         navController = navController,
-                        startDestination = Route.Favourites.route,
+                        startDestination = Route.Splash.route,
                         modifier = Modifier.Companion
                             .padding(innerPadding)
                     ) {

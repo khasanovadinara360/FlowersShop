@@ -30,7 +30,9 @@ import com.example.flowersshop.ui.theme.fonts3
 
 @Composable
 fun FavoriteScreen(navController: NavController, list: MutableList<BouquetModel>) {
-    Column(modifier = Modifier.fillMaxSize().padding(horizontal = 25.dp)) {
+    Column(modifier = Modifier
+        .fillMaxSize()
+        .padding(horizontal = 25.dp)) {
         Logo(
             modifier = Modifier
                 .align(Alignment.CenterHorizontally)
@@ -38,11 +40,19 @@ fun FavoriteScreen(navController: NavController, list: MutableList<BouquetModel>
         )
         Spacer(Modifier.height(10.dp))
         Row() {
-            Image(painter = painterResource(R.drawable.filter), "filter", modifier = Modifier.size(36.dp))
+            Image(
+                painter = painterResource(R.drawable.filter),
+                "filter",
+                modifier = Modifier.size(36.dp)
+            )
             Spacer(Modifier.weight(1f))
-            Image(painter = painterResource(R.drawable.search), "filter", modifier = Modifier.size(36.dp))
+            Image(
+                painter = painterResource(R.drawable.search),
+                "filter",
+                modifier = Modifier.size(36.dp)
+            )
         }
-        Text("Избранное", fontSize = 30.sp, fontFamily = fonts3, color = Color(0xFF2B2B2B))
+        Text("Избранное", fontSize = 30.sp, fontFamily = fonts3, color = Color(0xFF2B2B2B), modifier = Modifier.padding(vertical = 10.dp))
         LazyVerticalGrid(
             columns = GridCells.Fixed(2),
             verticalArrangement = Arrangement.spacedBy(15.dp),

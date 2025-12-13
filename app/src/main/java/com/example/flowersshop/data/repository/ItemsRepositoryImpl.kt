@@ -29,7 +29,6 @@ class ItemsRepositoryImpl: ItemsRepository {
 
 
         } catch (e: Exception) {
-            Log.e("HUETA", "Error", e)
             emptyList()
         }
     }
