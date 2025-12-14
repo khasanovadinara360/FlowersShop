@@ -8,25 +8,22 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -36,17 +33,14 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.flowersshop.R
-
-import coil.compose.AsyncImage
+import com.example.flowersshop.ui.Route
 import com.example.flowersshop.ui.components.BouquetCard
 import com.example.flowersshop.ui.components.CategoryChip
 import com.example.flowersshop.ui.components.Logo
-import com.example.flowersshop.ui.theme.fonts3
 
 data class Item(
     @DrawableRes val image: Int,
@@ -56,7 +50,15 @@ data class Item(
 )
 
 @Composable
-fun MainScreen(navController: NavController, cartCount: MutableState<Int>) {
+fun MainScreen(
+    navController: NavController,
+    cartCount: MutableState<Int>,
+    viewModel: MainViewModel = hiltViewModel()
+) {
+    val state = viewModel.state.value
+    LaunchedEffect(Unit) {
+        viewModel.getData()
+    }
     val cats = listOf(
         "Часто заказывают",
         "Новинки",
@@ -161,7 +163,7 @@ fun MainScreen(navController: NavController, cartCount: MutableState<Int>) {
 //        "Мягкие игрушки" to listOf(""),
 //        "Воздушные шары" to listOf("")
     )
-    val category = remember { mutableStateOf("Часто заказывают") }
+//    val category = remember { mutableStateOf("Часто заказывают") }
     Column(
         modifier = Modifier.padding(horizontal = 25.dp)
     ) {
@@ -170,19 +172,52 @@ fun MainScreen(navController: NavController, cartCount: MutableState<Int>) {
                 .align(Alignment.CenterHorizontally)
                 .padding(vertical = 25.dp)
         )
-        Box(
-            modifier = Modifier
-                .clip(RoundedCornerShape(16.dp))
-                .fillMaxWidth()
-                .height(150.dp)
-                .background(Color(0xFFd9d9d9))
+        val cards = listOf(
+            R.drawable.carousel1,
+            R.drawable.carousel2,
         )
-        Spacer(Modifier.height(20.dp))
+        val pagerState = rememberPagerState { cards.size }
+        HorizontalPager(state = pagerState, modifier = Modifier.fillMaxWidth()) { card ->
+            Image(
+                painter = painterResource(cards[card]),
+                null,
+                modifier = Modifier
+                    .padding(horizontal = 5.dp)
+                    .fillMaxWidth(),
+                contentScale = ContentScale.FillWidth
+            )
+        }
+        Row(
+            modifier = Modifier
+                .align(Alignment.CenterHorizontally)
+                .padding(vertical = 15.dp),
+            horizontalArrangement = Arrangement.spacedBy(4.dp)
+        ) {
+            repeat(cards.size) { i ->
+                Box(
+                    modifier = Modifier
+                        .clip(CircleShape)
+                        .size(9.dp)
+                        .background(
+                            if (pagerState.currentPage == i) Color(0xFF655F5F)
+                            else Color(0xFFD9D9D9)
+                        )
+                )
+            }
+        }
+//        Box(
+//            modifier = Modifier
+//                .clip(RoundedCornerShape(16.dp))
+//                .fillMaxWidth()
+//                .height(150.dp)
+//                .background(Color(0xFFd9d9d9))
+//        )
+//        Spacer(Modifier.height(20.dp))
         LazyRow(
             horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            items(cats) { i ->
-                CategoryChip(i, i == category.value, category)
+            items(state.categories) { i ->
+                CategoryChip(i, i == state.category, viewModel)
             }
         }
         Spacer(Modifier.height(15.dp))
@@ -191,11 +226,12 @@ fun MainScreen(navController: NavController, cartCount: MutableState<Int>) {
             verticalArrangement = Arrangement.spacedBy(15.dp),
             horizontalArrangement = Arrangement.spacedBy(15.dp)
         ) {
-            val list = if (items[category.value] != null) {
-                items[category.value]!!
-            } else {
-                items["Часто заказывают"]!!
-            }
+            val list = state.bouquets
+//                if (items[category.value] != null) {
+//                items[category.value]!!
+//            } else {
+//                items["Часто заказывают"]!!
+//            }
             items(
                 list.size
             ) { t ->
@@ -205,13 +241,15 @@ fun MainScreen(navController: NavController, cartCount: MutableState<Int>) {
                         .fillMaxWidth()
 //                        .weight(1f)
                         .background(Color(0xFFE4E3E1), shape = RoundedCornerShape(28.dp))
-                        .padding(bottom = 15.dp),
-                    i.image,
+                        .padding(bottom = 15.dp)
+                        .clickable { navController.navigate(Route.BouquetCard.createRoute(i.id)) },
+                    i.imageUrl,
                     i.title,
                     i.desc,
                     i.coast,
-                    cartCount
-                )
+                    cartCount,
+
+                    )
             }
         }
     }

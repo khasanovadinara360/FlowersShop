@@ -10,6 +10,7 @@ data class BouquetState(
 
     val page: Int = 0,
     val coast: Long = 0,
+    val resBouquetUrl: String = "",
 
     val flowers: List<ItemModel> = emptyList(),
     val flowersCount: Int = 1,

@@ -13,12 +13,15 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.example.flowersshop.domain.model.BouquetModel
 import com.example.flowersshop.domain.model.ItemModel
+import com.example.flowersshop.ui.bouquet.BouquetCardScreen
 import com.example.flowersshop.ui.components.BottomNav
 import com.example.flowersshop.ui.login.LoginScreen
 import com.example.flowersshop.ui.pages.main.MainScreen
@@ -38,6 +41,9 @@ sealed class Route(val route: String) {
     data object Onb : Route("onb")
     data object Bouquet : Route("bouquet")
     data object Login : Route("login")
+    data object BouquetCard : Route("bouquetCard/{bouquetId}") {
+        fun createRoute(bouquetId: String) = "bouquetCard/$bouquetId"
+    }
 }
 
 @AndroidEntryPoint
@@ -54,18 +60,22 @@ class MainActivity : ComponentActivity() {
                 "splash",
                 "onb",
                 "login",
-                )
-            val cartCount = remember { mutableStateOf(1) }
+                "bouquetCard"
+            )
+            val hideBottomBar = notBottomBars.any { route ->
+                currentRoute?.startsWith(route) == true
+            }
+            val cartCount = remember { mutableStateOf(0) }
             val favorites = mutableListOf<BouquetModel>(
-                BouquetModel("1", "https://usbtrvwvcopzwhjczmzh.supabase.co/storage/v1/object/public/bouquets/bouquet1.png", "Букет 1", 1000),
-                BouquetModel("2", "https://usbtrvwvcopzwhjczmzh.supabase.co/storage/v1/object/public/bouquets/bouquet2.png", "Букет 2", 2000),
-                BouquetModel("3", "https://usbtrvwvcopzwhjczmzh.supabase.co/storage/v1/object/public/bouquets/bouquet3.png", "Букет 3", 3000),
-                BouquetModel("4", "https://usbtrvwvcopzwhjczmzh.supabase.co/storage/v1/object/public/bouquets/bouquet4.png", "Букет 4", 4000),
+//                BouquetModel("1", "https://usbtrvwvcopzwhjczmzh.supabase.co/storage/v1/object/public/bouquets/bouquet1.png", "Букет 1", 1000),
+//                BouquetModel("2", "https://usbtrvwvcopzwhjczmzh.supabase.co/storage/v1/object/public/bouquets/bouquet2.png", "Букет 2", 2000),
+//                BouquetModel("3", "https://usbtrvwvcopzwhjczmzh.supabase.co/storage/v1/object/public/bouquets/bouquet3.png", "Букет 3", 3000),
+//                BouquetModel("4", "https://usbtrvwvcopzwhjczmzh.supabase.co/storage/v1/object/public/bouquets/bouquet4.png", "Букет 4", 4000),
             )
             FlowersShopTheme(dynamicColor = false) {
                 Scaffold(
                     bottomBar = {
-                        if (currentRoute !in notBottomBars) {
+                        if (!hideBottomBar) {
                             BottomNav(
                                 navController,
                                 modifier = Modifier
@@ -81,7 +91,7 @@ class MainActivity : ComponentActivity() {
                 ) { innerPadding ->
                     NavHost(
                         navController = navController,
-                        startDestination = Route.Splash.route,
+                        startDestination = Route.Main.route,
                         modifier = Modifier.Companion
                             .padding(innerPadding)
                     ) {
@@ -105,6 +115,15 @@ class MainActivity : ComponentActivity() {
                         }
                         composable(Route.Login.route) {
                             LoginScreen(navController)
+                        }
+                        composable(
+                            route = Route.BouquetCard.route,
+                            arguments = listOf(
+                            navArgument("bouquetId") {
+                                type = NavType.StringType
+                            }
+                        )) {
+                            BouquetCardScreen(navController, cartCount = cartCount)
                         }
                     }
                 }

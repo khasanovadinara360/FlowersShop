@@ -50,7 +50,7 @@ val buttons = listOf(
 
 @Composable
 fun BottomNav(navController: NavController, modifier: Modifier, cart: MutableState<Int>) {
-    val currentPage = remember { mutableStateOf("") }
+    val currentPage = remember { mutableStateOf("main") }
     Row(
         modifier = modifier,
         horizontalArrangement = Arrangement.SpaceAround,

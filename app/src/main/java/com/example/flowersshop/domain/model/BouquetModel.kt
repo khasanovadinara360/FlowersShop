@@ -4,5 +4,9 @@ data class BouquetModel(
     val id: String,
     val imageUrl: String,
     val title: String,
-    val coast: Long
+    val desc: String,
+    val coast: Long,
+    val category: String,
+    val width: Int?,
+    val height: Int?
 )

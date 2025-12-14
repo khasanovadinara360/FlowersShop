@@ -32,7 +32,13 @@ import com.example.flowersshop.ui.pages.bouquet.BouquetViewModel
 import com.example.flowersshop.ui.theme.fonts3
 
 @Composable
-fun ItemCard(imageUrl: String, title: String, coast: Long, action: () -> Unit = {}, iconFav: Boolean = false) {
+fun ItemCard(
+    imageUrl: String,
+    title: String,
+    coast: Long,
+    action: () -> Unit = {},
+    iconFav: Boolean = false
+) {
     Column(
         modifier = Modifier
             .clip(RoundedCornerShape(26.dp))
@@ -40,19 +46,35 @@ fun ItemCard(imageUrl: String, title: String, coast: Long, action: () -> Unit = 
             .clickable {
                 action()
             }
-            .padding( 5.dp)
+            .padding(5.dp)
     ) {
-        AsyncImage(
-            model = ImageRequest.Builder(LocalContext.current)
-                .data(imageUrl)
-                .crossfade(true)
-                .build(),
-            contentDescription = "item",
-            contentScale = ContentScale.FillWidth,
-            placeholder = painterResource(R.drawable.placeholder),
-            error = painterResource(R.drawable.login),
-            modifier = Modifier.heightIn(158.dp).fillMaxWidth().clip(RoundedCornerShape(21.dp))
-        )
+        if (imageUrl.isNotBlank()) {
+
+
+            AsyncImage(
+                model = ImageRequest.Builder(LocalContext.current)
+                    .data(imageUrl)
+                    .crossfade(true)
+                    .build(),
+                contentDescription = "item",
+                contentScale = ContentScale.FillWidth,
+                placeholder = painterResource(R.drawable.placeholder),
+                error = painterResource(R.drawable.login),
+                modifier = Modifier
+                    .heightIn(158.dp)
+                    .fillMaxWidth()
+                    .clip(RoundedCornerShape(21.dp))
+            )
+        } else {
+            Image(
+                painter = painterResource(R.drawable.placeholder), null,
+                contentScale = ContentScale.FillWidth,
+                modifier = Modifier
+                    .heightIn(158.dp)
+                    .fillMaxWidth()
+                    .clip(RoundedCornerShape(21.dp))
+            )
+        }
         Column(
             modifier = Modifier.padding(horizontal = 10.dp, vertical = 15.dp),
             verticalArrangement = Arrangement.spacedBy(15.dp)
@@ -66,5 +88,5 @@ fun ItemCard(imageUrl: String, title: String, coast: Long, action: () -> Unit = 
 @Preview
 @Composable
 fun ItemCardPrev() {
-    ItemCard("",  "Раникулюнкус", 200L, {})
+    ItemCard("", "Раникулюнкус", 200L, {})
 }

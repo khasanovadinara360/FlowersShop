@@ -13,15 +13,19 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.example.flowersshop.ui.pages.main.MainEvents
+import com.example.flowersshop.ui.pages.main.MainViewModel
 
 @Composable
-fun CategoryChip(title: String, selected: Boolean = false, category: MutableState<String>) {
+fun CategoryChip(title: String, selected: Boolean = false, viewModel: MainViewModel) {
     Box(
         modifier = Modifier
             .clip(RoundedCornerShape(12.dp))
             .background(if (selected) Color(0xFF655F5F) else Color(0xFFAFAFAF))
             .padding(horizontal = 16.dp, vertical = 8.dp)
-            .clickable { category.value = title }
+            .clickable {
+                viewModel.onEvent(MainEvents.OnCategoryChange(title))
+            }
     ) {
         Text(
             text = title,

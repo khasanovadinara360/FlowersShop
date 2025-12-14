@@ -35,12 +35,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import coil.compose.AsyncImage
+import coil.request.ImageRequest
 import com.example.flowersshop.R
 import com.example.flowersshop.ui.components.ItemCard
 import com.example.flowersshop.ui.components.Logo
@@ -283,11 +286,14 @@ fun BouquetScreen(
                     Alignment.CenterHorizontally
                 )
             )
-            Image(
-                painter = painterResource(R.drawable.placeholder),
+            AsyncImage(
+                model = ImageRequest.Builder(LocalContext.current)
+                    .data(state.resBouquetUrl)
+                    .crossfade(true)
+                    .build(),
                 "bouquet",
                 modifier = Modifier
-                    .padding(horizontal = 55.dp)
+                    .padding(horizontal = 55.dp, vertical = 10.dp)
                     .fillMaxWidth()
                     .clip(RoundedCornerShape(42.dp)),
                 contentScale = ContentScale.FillWidth

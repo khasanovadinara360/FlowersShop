@@ -4,18 +4,21 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.flowersshop.domain.usecase.GetBouquetBuildUseCase
 import com.example.flowersshop.domain.usecase.GetItemsByCategory
 import com.example.flowersshop.domain.usecase.GetItemsUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel
 class BouquetViewModel @Inject constructor(
     private val getItems: GetItemsUseCase,
-    private val getItemsByCategory: GetItemsByCategory
+    private val getItemsByCategory: GetItemsByCategory,
+    private val getBouquetBuildUseCase: GetBouquetBuildUseCase
 ) : ViewModel() {
     private val _state = mutableStateOf(BouquetState())
     val state: State<BouquetState> = _state
@@ -39,6 +42,18 @@ class BouquetViewModel @Inject constructor(
             )
         }
     }
+    fun getBouquetBuild(flowerId: String, greenId: String) {
+        viewModelScope.launch(Dispatchers.IO) {
+            val res = getBouquetBuildUseCase.execute(flowerId, greenId)
+            if (res.isSuccess) {
+                withContext(Dispatchers.Main) {
+                    _state.value = _state.value.copy(
+                        resBouquetUrl = res.getOrNull()!!
+                    )
+                }
+            }
+        }
+    }
 
     fun onEvent(event: BouquetEvents) {
         when (event) {
@@ -59,6 +74,7 @@ class BouquetViewModel @Inject constructor(
                     coast = _state.value.coast + event.value.coast,
                     page = _state.value.page + 1
                 )
+                getBouquetBuild(_state.value.items[0].id, _state.value.items[1].id)
             }
 
             is BouquetEvents.OnPackClick -> {

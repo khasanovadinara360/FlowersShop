@@ -1,5 +1,6 @@
 package com.example.flowersshop.ui.components
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -19,31 +20,64 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil.ImageLoader
+import coil.compose.AsyncImage
+import coil.request.ImageRequest
+import com.example.flowersshop.R
 import com.example.flowersshop.ui.theme.fonts3
+import okhttp3.OkHttpClient
+import okhttp3.Protocol
+import java.util.concurrent.TimeUnit
 
 @Composable
 fun BouquetCard(
     modifier: Modifier = Modifier,
-    image: Int,
+    imageUrl: String,
     title: String,
     desc: String,
-    coast: Int,
+    coast: Long,
     cartCount: MutableState<Int>
 ) {
+    val imageLoader = ImageLoader.Builder(LocalContext.current)
+        .okHttpClient {
+            OkHttpClient.Builder()
+                .protocols(listOf(Protocol.HTTP_1_1))
+                .connectTimeout(30, TimeUnit.SECONDS)
+                .readTimeout(30, TimeUnit.SECONDS)
+                .writeTimeout(30, TimeUnit.SECONDS)
+                .build()
+        }
+        .build()
+
     Column(
         modifier = modifier
     ) {
-        Image(
-            painter = painterResource(image),
+        AsyncImage(
+            model = ImageRequest.Builder(LocalContext.current)
+                .data(imageUrl)
+                .crossfade(true)
+                .build(),
             contentDescription = null,
             contentScale = ContentScale.FillWidth,
+            placeholder = painterResource(R.drawable.placeholder),
+            error = painterResource(R.drawable.error),
             modifier = Modifier
                 .fillMaxWidth()
-                .clip(RoundedCornerShape(26.dp))
+                .clip(RoundedCornerShape(26.dp)),
+            onError = { error ->
+                Log.e(
+                    "AsyncImage",
+                    "Ошибка загрузки картинки. Url $imageUrl",
+                    error.result.throwable
+                )
+
+            },
+                    imageLoader = imageLoader
         )
 
         Spacer(Modifier.height(11.dp))
@@ -63,7 +97,8 @@ fun BouquetCard(
                 text = desc,
                 fontSize = 8.sp,
                 fontFamily = fonts3,
-                color = Color(0xFF0A1F33)
+                color = Color(0xFF0A1F33),
+                maxLines = 3,
             )
 
             Spacer(Modifier.height(15.dp))
@@ -74,7 +109,7 @@ fun BouquetCard(
                     .width(80.dp)
                     .clip(RoundedCornerShape(9.dp))
                     .background(Color(0xFF532A2A))
-                    .clickable {cartCount.value += 1}
+                    .clickable { cartCount.value += 1 }
                     .align(Alignment.CenterHorizontally),
                 contentAlignment = Alignment.Center
             ) {
