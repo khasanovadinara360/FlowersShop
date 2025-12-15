@@ -1,6 +1,5 @@
 package com.example.flowersshop.ui.theme
 
-import android.app.Activity
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
@@ -16,14 +15,14 @@ private val DarkColorScheme = darkColorScheme(
     background = Color.White,
     primary = Purple80,
     secondary = PurpleGrey80,
-    tertiary = Pink80
+    tertiary = Color(0xFF2B2B2B)
 )
 
 private val LightColorScheme = lightColorScheme(
     background = Color.White,
     primary = Purple40,
     secondary = PurpleGrey40,
-    tertiary = Pink40
+    tertiary = Color(0xFF2B2B2B)
 
     /* Other default colors to override
     background = Color(0xFFFFFBFE),

@@ -8,6 +8,7 @@ data class BouquetState(
     val pack: ItemModel? = null,
     val card: ItemModel? = null,
 
+    val isGreen: Boolean = false,
     val page: Int = 0,
     val coast: Long = 0,
     val resBouquetUrl: String = "",

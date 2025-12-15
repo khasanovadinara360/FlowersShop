@@ -1,19 +1,15 @@
 package com.example.flowersshop.ui.bouquet
 
-import android.text.Layout
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -46,10 +42,8 @@ import coil.request.ImageRequest
 import com.example.flowersshop.R
 import com.example.flowersshop.ui.Route
 import com.example.flowersshop.ui.components.Logo
-import com.example.flowersshop.ui.pages.bouquet.BouquetEvents
 import com.example.flowersshop.ui.theme.fonts3
 import com.example.flowersshop.ui.theme.fonts4
-import io.github.jan.supabase.realtime.Column
 
 @Composable
 fun BouquetCardScreen(
@@ -79,8 +73,12 @@ fun BouquetCardScreen(
         if (state.isLoading) {
             Text("Загрузка")
         } else {
-            Column (modifier = Modifier.fillMaxSize()) {
-                Column(modifier = Modifier.weight(1f).verticalScroll(rememberScrollState()))
+            Column(modifier = Modifier.fillMaxSize()) {
+                Column(
+                    modifier = Modifier
+                        .weight(1f)
+                        .verticalScroll(rememberScrollState())
+                )
                 {
                     val bouquet = state.bouquet!!
                     Box() {
@@ -99,7 +97,7 @@ fun BouquetCardScreen(
                         )
 
                         Image(
-                            painter = if (isFavourite.value) {
+                            painter = if (state.isFavourite) {
                                 painterResource(R.drawable.favourite_select)
                             } else {
                                 painterResource(R.drawable.favourites)
@@ -108,7 +106,9 @@ fun BouquetCardScreen(
                             modifier = Modifier
                                 .size(39.dp)
                                 .padding(end = 14.dp, bottom = 14.dp)
-                                .clickable { isFavourite.value = !isFavourite.value }
+                                .clickable {
+                                    viewModel.onEvent(BouquetCardEvents.OnFavouriteClick(bouquet.id))
+                                }
                                 .align(Alignment.BottomEnd))
                     }
                     Spacer(Modifier.height(35.dp))
@@ -117,7 +117,8 @@ fun BouquetCardScreen(
                             bouquet.title,
                             modifier = Modifier.weight(1f),
                             fontFamily = fonts3,
-                            fontSize = 25.sp
+                            fontSize = 25.sp,
+                            color = Color(0xFF2B2B2B)
                         )
                         Box(
                             modifier = Modifier
@@ -140,63 +141,72 @@ fun BouquetCardScreen(
                         bouquet.desc,
                         modifier = Modifier.padding(top = 15.dp, bottom = 26.dp),
                         fontFamily = fonts3,
-                        fontSize = 15.sp
+                        fontSize = 15.sp,
+                        color = Color(0xFF2B2B2B)
                     )
-                    Box(
-                        modifier = Modifier
-                            .padding(horizontal = 14.dp)
-                            .fillMaxWidth()
-                            .clip(RoundedCornerShape(20.dp))
-                            .background(Color(0xFFD9D9D9))
+                    if (bouquet.width != null && bouquet.height != null) {
+                        Box(
+                            modifier = Modifier
+                                .padding(horizontal = 14.dp)
+                                .fillMaxWidth()
+                                .clip(RoundedCornerShape(20.dp))
+                                .background(Color(0xFFD9D9D9))
 
-                    ) {
-                        Text(
-                            "Ширина",
+                        ) {
+                            Text(
+                                "Ширина",
+                                modifier = Modifier
+                                    .padding(start = 42.dp, top = 10.dp, bottom = 10.dp)
+                                    .align(Alignment.CenterStart),
+                                fontFamily = fonts4,
+                                fontSize = 11.sp,
+                                color = Color(0xFF2B2B2B)
+                            )
+                            Text(
+                                bouquet.width.toString() + " см",
+                                modifier = Modifier
+                                    .padding(end = 42.dp)
+                                    .align(Alignment.CenterEnd),
+                                fontFamily = fonts4,
+                                fontSize = 11.sp,
+                                        color = Color(0xFF2B2B2B)
+                            )
+                        }
+                        Spacer(Modifier.height(7.dp))
+                        Box(
                             modifier = Modifier
-                                .padding(start = 42.dp, top = 10.dp, bottom = 10.dp)
-                                .align(Alignment.CenterStart),
-                            fontFamily = fonts4,
-                            fontSize = 11.sp
-                        )
-                        Text(
-                            bouquet.width.toString() + " см",
-                            modifier = Modifier
-                                .padding(end = 42.dp)
-                                .align(Alignment.CenterEnd),
-                            fontFamily = fonts4,
-                            fontSize = 11.sp
-                        )
-                    }
-                    Spacer(Modifier.height(7.dp))
-                    Box(
-                        modifier = Modifier
-                            .padding(horizontal = 14.dp)
-                            .fillMaxWidth()
-                            .clip(RoundedCornerShape(20.dp))
-                            .background(Color(0xFFD9D9D9))
+                                .padding(horizontal = 14.dp)
+                                .fillMaxWidth()
+                                .clip(RoundedCornerShape(20.dp))
+                                .background(Color(0xFFD9D9D9))
 
-                    ) {
-                        Text(
-                            "Высота",
-                            modifier = Modifier
-                                .padding(start = 42.dp, top = 10.dp, bottom = 10.dp)
-                                .align(Alignment.CenterStart),
-                            fontFamily = fonts4,
-                            fontSize = 11.sp
-                        )
-                        Text(
-                            bouquet.height.toString() + " см",
-                            modifier = Modifier
-                                .padding(end = 42.dp)
-                                .align(Alignment.CenterEnd),
-                            fontFamily = fonts4,
-                            fontSize = 11.sp
-                        )
+                        ) {
+                            Text(
+                                "Высота",
+                                modifier = Modifier
+                                    .padding(start = 42.dp, top = 10.dp, bottom = 10.dp)
+                                    .align(Alignment.CenterStart),
+                                fontFamily = fonts4,
+                                fontSize = 11.sp,
+                                color = Color(0xFF2B2B2B)
+
+                            )
+                            Text(
+                                bouquet.height.toString() + " см",
+                                modifier = Modifier
+                                    .padding(end = 42.dp)
+                                    .align(Alignment.CenterEnd),
+                                fontFamily = fonts4,
+                                fontSize = 11.sp,
+                                color = Color(0xFF2B2B2B)
+
+                            )
+                        }
                     }
                 }
                 Row(
                     modifier = Modifier
-                        .padding(top = 10.dp)
+                        .padding(vertical = 10.dp)
                 )
                 {
                     val height = remember { mutableStateOf(0.dp) }
@@ -218,6 +228,9 @@ fun BouquetCardScreen(
                             "-", modifier = Modifier
                                 .clickable {
                                     viewModel.onEvent(BouquetCardEvents.OnDelClick)
+                                    if (cartCount.value > 0) {
+                                        cartCount.value -= 1
+                                    }
                                 }
                                 .padding(start = 14.dp),
                             fontSize = 16.sp,
@@ -249,6 +262,7 @@ fun BouquetCardScreen(
                             .clip(RoundedCornerShape(19.dp))
                             .background(Color(0xFF6A4B4B))
                             .weight(1.56f)
+                            .clickable { cartCount.value += 1 }
                     ) {
                         Text(
                             "В корзину",

@@ -1,6 +1,5 @@
 package com.example.flowersshop.data.repository
 
-import android.util.Log
 import com.example.flowersshop.data.InitSupabaseClient.client
 import com.example.flowersshop.data.dto.ItemModelDto
 import com.example.flowersshop.data.dto.toDomain

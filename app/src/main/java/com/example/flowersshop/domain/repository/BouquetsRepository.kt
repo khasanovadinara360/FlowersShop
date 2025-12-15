@@ -7,4 +7,5 @@ interface BouquetsRepository {
     suspend fun getCategories(): Result<List<String>>
     suspend fun getBouquetBuild(flowerId: String, greenId: String): Result<String>
     suspend fun getBouquetById(flowerId: String): Result<BouquetModel>
+    suspend fun updateBouquet(flowerId: String): Result<Unit>
 }

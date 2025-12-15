@@ -1,5 +1,6 @@
 package com.example.flowersshop.ui.pages.bouquet
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -9,24 +10,18 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyHorizontalGrid
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -47,7 +42,6 @@ import coil.request.ImageRequest
 import com.example.flowersshop.R
 import com.example.flowersshop.ui.components.ItemCard
 import com.example.flowersshop.ui.components.Logo
-import com.example.flowersshop.ui.theme.fonts
 import com.example.flowersshop.ui.theme.fonts3
 import com.example.flowersshop.ui.theme.fonts4
 
@@ -163,7 +157,12 @@ fun BouquetScreen(
                     .fillMaxWidth(),
                 verticalArrangement = Arrangement.spacedBy(5.dp)
             ) {
-                items(state.items.size) { i ->
+                val itemsBouquet = state.items
+                items(itemsBouquet.size) { i ->
+                    Log.e("TAG", "BouquetScreen: " + itemsBouquet[i].title, )
+                    val isGreen = itemsBouquet[i].title.trim() == "Без зелени"
+                    //remember { mutableStateOf(false) }
+
                     Box(Modifier.height(IntrinsicSize.Max)) {
                         Row(
                             modifier = Modifier
@@ -180,103 +179,110 @@ fun BouquetScreen(
                                 modifier = Modifier.padding(end = 16.dp)
                             )
                             Text(
-                                state.items[i].title, modifier = Modifier.weight(1f),
+                                itemsBouquet[i].title, modifier = Modifier.weight(1f),
                                 fontSize = 16.sp,
                                 fontFamily = fonts4,
                                 color = Color(0xFF2B2B2B)
                             )
+                            if (!isGreen) {
+                                Row(
+                                    modifier = Modifier
+                                        .clip(RoundedCornerShape(18.5.dp))
+                                        .background(Color(0xFFD9D9D9)),
+                                    verticalAlignment = Alignment.CenterVertically
+                                )
+                                {
+                                    Text(
+                                        "-", modifier = Modifier
+                                            .clickable {
+                                                viewModel.onEvent(BouquetEvents.OnDelItemClick(state.items[i]))
+                                            }
+                                            .padding(start = 14.dp),
+                                        fontSize = 16.sp,
+                                        fontFamily = fonts4,
+                                        color = Color(0xFF6A4B4B)
+                                    )
+                                    Text(
+                                        when (i) {
+                                            0 -> {
+                                                state.flowersCount.toString()
+                                            }
+
+                                            1 -> {
+                                                state.greensCount.toString()
+                                            }
+
+                                            2 -> {
+                                                state.packsCount.toString()
+                                            }
+
+                                            3 -> {
+                                                state.cardsCount.toString()
+                                            }
+
+                                            else -> {
+                                                ""
+                                            }
+                                        },
+                                        fontSize = 15.sp,
+                                        fontFamily = fonts4,
+                                        color = Color(0xFF2B2B2B),
+                                        modifier = Modifier.padding(10.dp)
+                                    )
+                                    Text(
+                                        "+", modifier = Modifier
+                                            .clickable {
+                                                viewModel.onEvent(BouquetEvents.OnAddItemClick(state.items[i]))
+                                            }
+                                            .padding(end = 14.dp),
+                                        fontSize = 16.sp,
+                                        fontFamily = fonts4,
+                                        color = Color(0xFF6A4B4B)
+                                    )
+                                }
+                                Spacer(Modifier.width(60.dp))
+                            }
+                        }
+                        if (!isGreen) {
                             Row(
-                                modifier = Modifier
-                                    .clip(RoundedCornerShape(18.5.dp))
-                                    .background(Color(0xFFD9D9D9)),
+                                modifier = Modifier.fillMaxSize(),
                                 verticalAlignment = Alignment.CenterVertically
                             )
                             {
-                                Text(
-                                    "-", modifier = Modifier
-                                        .clickable {
-                                            viewModel.onEvent(BouquetEvents.OnDelItemClick(state.items[i]))
-                                        }
-                                        .padding(start = 14.dp),
-                                    fontSize = 16.sp,
-                                    fontFamily = fonts4,
-                                    color = Color(0xFF6A4B4B)
-                                )
+                                Spacer(Modifier.weight(1f))
                                 Text(
                                     when (i) {
                                         0 -> {
-                                            state.flowersCount.toString()
+                                            (itemsBouquet[i].coast * state.flowersCount).toString()
                                         }
 
                                         1 -> {
-                                            state.greensCount.toString()
+                                            (itemsBouquet[i].coast * state.greensCount).toString()
                                         }
 
                                         2 -> {
-                                            state.packsCount.toString()
+                                            (itemsBouquet[i].coast * state.packsCount).toString()
                                         }
 
                                         3 -> {
-                                            state.cardsCount.toString()
+                                            (itemsBouquet[i].coast * state.cardsCount).toString()
                                         }
 
                                         else -> {
                                             ""
                                         }
                                     },
-                                    fontSize = 15.sp,
-                                    fontFamily = fonts4,
-                                    color = Color(0xFF2B2B2B),
-                                    modifier = Modifier.padding(10.dp)
-                                )
-                                Text(
-                                    "+", modifier = Modifier
-                                        .clickable {
-                                            viewModel.onEvent(BouquetEvents.OnAddItemClick(state.items[i]))
-                                        }
-                                        .padding(end = 14.dp),
-                                    fontSize = 16.sp,
-                                    fontFamily = fonts4,
-                                    color = Color(0xFF6A4B4B)
+                                    modifier = Modifier
+                                        .padding(start = 16.dp)
                                 )
                             }
-                            Spacer(Modifier.width(60.dp))
-                        }
-                        Row(
-                            modifier = Modifier.fillMaxSize(),
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Spacer(Modifier.weight(1f))
-
-                            Text(
-                                when (i) {
-                                    0 -> {
-                                        (state.items[i].coast * state.flowersCount).toString()
-                                    }
-
-                                    1 -> {
-                                        (state.items[i].coast * state.greensCount).toString()
-                                    }
-
-                                    2 -> {
-                                        (state.items[i].coast * state.packsCount).toString()
-                                    }
-
-                                    3 -> {
-                                        (state.items[i].coast * state.cardsCount).toString()
-                                    }
-
-                                    else -> {
-                                        ""
-                                    }
-                                },
-                                modifier = Modifier
-                                    .padding(start = 16.dp)
-                            )
                         }
                     }
+
                 }
             }
+
+
             Text(
                 "Результат составления букета",
                 fontFamily = fonts3,
@@ -331,4 +337,6 @@ fun BouquetScreen(
             }
         }
     }
+
+
 }

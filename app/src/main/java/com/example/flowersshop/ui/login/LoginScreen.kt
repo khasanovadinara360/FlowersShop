@@ -25,8 +25,8 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.flowersshop.R
-import com.example.flowersshop.ui.components.Logo
 import com.example.flowersshop.ui.Route
+import com.example.flowersshop.ui.components.Logo
 import com.example.flowersshop.ui.theme.fonts
 
 @Composable

@@ -9,7 +9,6 @@ import com.example.flowersshop.domain.usecase.GetItemsByCategory
 import com.example.flowersshop.domain.usecase.GetItemsUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
@@ -100,28 +99,28 @@ class BouquetViewModel @Inject constructor(
                     "flowers" -> {
                         _state.value = _state.value.copy(
                             flowersCount = _state.value.flowersCount + 1,
-                            coast = _state.value.coast + event.item.coast * _state.value.flowersCount
+                            coast = _state.value.coast + event.item.coast
                         )
                     }
 
                     "greens" -> {
                         _state.value = _state.value.copy(
                             greensCount = _state.value.greensCount + 1,
-                            coast = _state.value.coast + event.item.coast * _state.value.greensCount
+                            coast = _state.value.coast + event.item.coast
                         )
                     }
 
                     "packs" -> {
                         _state.value = _state.value.copy(
                             packsCount = _state.value.packsCount + 1,
-                            coast = _state.value.coast + event.item.coast * _state.value.packsCount
+                            coast = _state.value.coast + event.item.coast
                         )
                     }
 
                     "cards" -> {
                         _state.value = _state.value.copy(
                             cardsCount = _state.value.cardsCount + 1,
-                            coast = _state.value.coast + event.item.coast * _state.value.cardsCount
+                            coast = _state.value.coast + event.item.coast
                         )
                     }
                 }

@@ -7,6 +7,7 @@ import com.example.flowersshop.domain.model.BouquetModel
 import com.example.flowersshop.domain.repository.BouquetsRepository
 import io.github.jan.supabase.postgrest.postgrest
 import io.github.jan.supabase.postgrest.query.Columns
+import kotlin.Result
 
 class BouquetsRepositoryImpl() : BouquetsRepository {
     override suspend fun getBouquetsByCategory(category: String): Result<List<BouquetModel>> {
@@ -23,6 +24,17 @@ class BouquetsRepositoryImpl() : BouquetsRepository {
             Result.failure(e)
         }
 
+    }
+
+    override suspend fun updateBouquet(flowerId: String): Result<Unit> {
+        return try {
+            val res = client.postgrest["bouquets"].update {
+
+            }
+            Result.success(Unit)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
     }
 
     override suspend fun getCategories(): Result<List<String>> {

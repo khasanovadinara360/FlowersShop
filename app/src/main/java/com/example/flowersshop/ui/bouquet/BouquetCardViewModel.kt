@@ -46,9 +46,14 @@ class BouquetCardViewModel @Inject constructor(
                 )
             }
             BouquetCardEvents.OnDelClick -> {
-                if (_state.value.count > 1)
+                if (_state.value.count > 0)
                 _state.value = _state.value.copy(
                     count = _state.value.count - 1
+                )
+            }
+            is BouquetCardEvents.OnFavouriteClick -> {
+                _state.value = _state.value.copy(
+                    isFavourite = !_state.value.isFavourite
                 )
             }
         }
