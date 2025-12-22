@@ -49,7 +49,7 @@ fun SplashScreen(navController: NavController, viewModel: SplashViewModel = hilt
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Image(
-                painter = painterResource(R.drawable.flower),
+                painter = painterResource(R.drawable.bouquet),
                 "flower",
                 modifier = Modifier
                     .fillMaxWidth()

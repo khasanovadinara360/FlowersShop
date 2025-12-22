@@ -1,5 +1,7 @@
 package com.example.flowersshop.ui.bouquet
 
+import android.widget.Toast
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -19,6 +21,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -40,7 +43,6 @@ import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.flowersshop.R
-import com.example.flowersshop.ui.Route
 import com.example.flowersshop.ui.components.Logo
 import com.example.flowersshop.ui.theme.fonts3
 import com.example.flowersshop.ui.theme.fonts4
@@ -48,12 +50,21 @@ import com.example.flowersshop.ui.theme.fonts4
 @Composable
 fun BouquetCardScreen(
     navController: NavController,
-    viewModel: BouquetCardViewModel = hiltViewModel(),
-    cartCount: MutableState<Int>
+    viewModel: BouquetCardViewModel = hiltViewModel()
 ) {
     val state = viewModel.state.value
-    val isFavourite = remember { mutableStateOf(false) }
-    Column(modifier = Modifier.padding(horizontal = 25.dp)) {
+    val context = LocalContext.current
+    BackHandler {
+
+        viewModel.onEvent(BouquetCardEvents.OnBackClick)
+        navController.popBackStack()
+    }
+    LaunchedEffect(state.isSuccess) {
+        if (state.isSuccess) {
+            Toast.makeText(context, "В корзине", Toast.LENGTH_SHORT).show()
+        }
+    }
+    Column(modifier = Modifier.padding(horizontal = 25.dp).fillMaxWidth()) {
         Logo(
             modifier = Modifier
                 .align(Alignment.CenterHorizontally)
@@ -65,7 +76,8 @@ fun BouquetCardScreen(
             tint = Color(0xFF7C5454),
             modifier = Modifier
                 .clickable {
-                    navController.navigate(Route.Main.route)
+                    viewModel.onEvent(BouquetCardEvents.OnBackClick)
+                    navController.popBackStack()
                 }
                 .padding(bottom = 10.dp)
                 .align(Alignment.Start)
@@ -100,11 +112,11 @@ fun BouquetCardScreen(
                             painter = if (state.isFavourite) {
                                 painterResource(R.drawable.favourite_select)
                             } else {
-                                painterResource(R.drawable.favourites)
+                                painterResource(R.drawable.favourites_button)
                             },
                             null,
                             modifier = Modifier
-                                .size(39.dp)
+                                .size(60.dp)
                                 .padding(end = 14.dp, bottom = 14.dp)
                                 .clickable {
                                     viewModel.onEvent(BouquetCardEvents.OnFavouriteClick(bouquet.id))
@@ -125,8 +137,7 @@ fun BouquetCardScreen(
                                 .height(40.dp)
                                 .width(80.dp)
                                 .clip(RoundedCornerShape(19.dp))
-                                .background(Color(0xFF532A2A))
-                                .clickable { cartCount.value += 1 },
+                                .background(Color(0xFF532A2A)),
                             contentAlignment = Alignment.Center
                         ) {
                             Text(
@@ -228,9 +239,7 @@ fun BouquetCardScreen(
                             "-", modifier = Modifier
                                 .clickable {
                                     viewModel.onEvent(BouquetCardEvents.OnDelClick)
-                                    if (cartCount.value > 0) {
-                                        cartCount.value -= 1
-                                    }
+
                                 }
                                 .padding(start = 14.dp),
                             fontSize = 16.sp,
@@ -262,7 +271,9 @@ fun BouquetCardScreen(
                             .clip(RoundedCornerShape(19.dp))
                             .background(Color(0xFF6A4B4B))
                             .weight(1.56f)
-                            .clickable { cartCount.value += 1 }
+                            .clickable {
+                                viewModel.onEvent(BouquetCardEvents.OnCartClick)
+                                }
                     ) {
                         Text(
                             "В корзину",

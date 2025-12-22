@@ -56,6 +56,7 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.8.7")
 
     implementation("io.ktor:ktor-client-okhttp:2.3.8")
+    implementation("io.ktor:ktor-client-cio:2.3.8")
 
     implementation("io.coil-kt:coil-compose:2.7.0")
 //    implementation(libs.ktor.client.core)

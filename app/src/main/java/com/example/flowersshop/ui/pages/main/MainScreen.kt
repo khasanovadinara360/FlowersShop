@@ -1,5 +1,6 @@
 package com.example.flowersshop.ui.pages.main
 
+import android.widget.Toast
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -29,6 +30,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -49,118 +51,15 @@ data class Item(
 @Composable
 fun MainScreen(
     navController: NavController,
-    cartCount: MutableState<Int>,
     viewModel: MainViewModel = hiltViewModel()
 ) {
+    val context = LocalContext.current
     val state = viewModel.state.value
-    LaunchedEffect(Unit) {
-        viewModel.getData()
+    LaunchedEffect(state.isSuccess) {
+        if (state.isSuccess) {
+            Toast.makeText(context, "В корзине", Toast.LENGTH_SHORT).show()
+        }
     }
-    val cats = listOf(
-        "Часто заказывают",
-        "Новинки",
-        "Сборные букеты",
-        "Моно букеты",
-        "Букеты PREMIUM",
-        "Комбо",
-        "Букеты-гиганты",
-        "Композиции в корзине",
-        "Композиции в коробке",
-        "Композиции в сумочке",
-        "Мягкие игрушки",
-        "Воздушные шары",
-    )
-    val items = mapOf(
-        "Часто заказывают" to listOf(
-            Item(
-                R.drawable.lilii,
-                "Букет ароматных лилий",
-                "5 королевских лилий в оформлении",
-                3900
-            ),
-            Item(
-                R.drawable.lilii,
-                "Букет ароматных лилий",
-                "5 королевских лилий в оформлении",
-                3900
-            ),
-            Item(
-                R.drawable.lilii,
-                "Букет ароматных лилий",
-                "5 королевских лилий в оформлении",
-                3900
-            )
-        ),
-        "Новинки" to listOf(
-            Item(
-                R.drawable.lilii,
-                "Букет ароматных членов",
-                "5 королевских членов в оформлении",
-                3900
-            ),
-            Item(
-                R.drawable.lilii,
-                "Букет ароматных членов",
-                "5 королевских членов в оформлении",
-                3900
-            ),
-            Item(
-                R.drawable.lilii,
-                "Букет ароматных членов",
-                "5 королевских членов в оформлении",
-                3900
-            )
-        ),
-        "Сборные букеты" to listOf(
-            Item(
-                R.drawable.lilii,
-                "Букет ароматных лилий",
-                "5 королевских лилий в оформлении",
-                3900
-            ),
-            Item(
-                R.drawable.lilii,
-                "Букет ароматных лилий",
-                "5 королевских лилий в оформлении",
-                3900
-            ),
-            Item(
-                R.drawable.lilii,
-                "Букет ароматных лилий",
-                "5 королевских лилий в оформлении",
-                3900
-            )
-        ),
-        "Моно букеты" to listOf(
-            Item(
-                R.drawable.lilii,
-                "Букет ароматных лилий",
-                "5 королевских лилий в оформлении",
-                3900
-            ),
-            Item(
-                R.drawable.lilii,
-                "Букет ароматных лилий",
-                "5 королевских лилий в оформлении",
-                3900
-            ),
-            Item(
-                R.drawable.lilii,
-                "Букет ароматных лилий",
-                "5 королевских лилий в оформлении",
-                3900
-            )
-        ),
-//        "Букеты PREMIUM" to listOf(""),
-//        "Комбо" to listOf(""),
-//        "Букеты-гиганты" to listOf(""),
-//        "Композиции в корзине" to listOf(""),
-//        "Композиции в коробке" to listOf(""),
-//        "Композиции в сумочке" to listOf(""),
-//        "Мягкие игрушки" to listOf(""),
-//        "Воздушные шары" to listOf("")
-    )
-//    val category = remember { mutableStateOf("Часто заказывают") }
     Column(
         modifier = Modifier.padding(horizontal = 25.dp)
     ) {
@@ -202,14 +101,6 @@ fun MainScreen(
                 )
             }
         }
-//        Box(
-//            modifier = Modifier
-//                .clip(RoundedCornerShape(16.dp))
-//                .fillMaxWidth()
-//                .height(150.dp)
-//                .background(Color(0xFFd9d9d9))
-//        )
-//        Spacer(Modifier.height(20.dp))
         LazyRow(
             horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
@@ -221,14 +112,10 @@ fun MainScreen(
         LazyVerticalGrid(
             columns = GridCells.Fixed(2),
             verticalArrangement = Arrangement.spacedBy(15.dp),
-            horizontalArrangement = Arrangement.spacedBy(15.dp)
+            horizontalArrangement = Arrangement.spacedBy(15.dp),
+            state = viewModel.gridState
         ) {
             val list = state.bouquets
-//                if (items[category.value] != null) {
-//                items[category.value]!!
-//            } else {
-//                items["Часто заказывают"]!!
-//            }
             items(
                 list.size
             ) { t ->
@@ -236,16 +123,17 @@ fun MainScreen(
                 BouquetCard(
                     modifier = Modifier
                         .fillMaxWidth()
-//                        .weight(1f)
                         .background(Color(0xFFE4E3E1), shape = RoundedCornerShape(28.dp))
                         .padding(bottom = 15.dp)
                         .clickable { navController.navigate(Route.BouquetCard.createRoute(i.id)) },
+                    i.id,
                     i.imageUrl,
                     i.title,
                     i.desc,
                     i.coast,
-                    cartCount,
-
+                    action =  {
+                        viewModel.onEvent(MainEvents.OnCartClick(i.id))
+                    }
                     )
             }
         }

@@ -1,6 +1,7 @@
 package com.example.flowersshop.ui.pages.bouquet
 
 import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -22,9 +23,7 @@ import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -56,10 +55,15 @@ data class Page(
 @Composable
 fun BouquetScreen(
     navController: NavController,
-    viewModel: BouquetViewModel = hiltViewModel(),
-    cart: MutableState<Int>
+    viewModel: BouquetViewModel = hiltViewModel()
 ) {
     val state = viewModel.state.value
+    val context = LocalContext.current
+    LaunchedEffect(state.isSuccess) {
+        if (state.isSuccess) {
+            Toast.makeText(context, "В корзине", Toast.LENGTH_SHORT).show()
+        }
+    }
     val items = listOf(
         Page("01", "Выберите цветок", "flowers"),
         Page("02", "Выберите зелень", "greens"),
@@ -156,14 +160,16 @@ fun BouquetScreen(
                     .padding(30.dp)
                     .fillMaxWidth(),
                 verticalArrangement = Arrangement.spacedBy(5.dp)
-            ) {
+            )
+            {
                 val itemsBouquet = state.items
                 items(itemsBouquet.size) { i ->
                     Log.e("TAG", "BouquetScreen: " + itemsBouquet[i].title, )
                     val isGreen = itemsBouquet[i].title.trim() == "Без зелени"
                     //remember { mutableStateOf(false) }
 
-                    Box(Modifier.height(IntrinsicSize.Max)) {
+                    Box(Modifier.height(IntrinsicSize.Max))
+                    {
                         Row(
                             modifier = Modifier
                                 .fillMaxWidth()
@@ -281,8 +287,6 @@ fun BouquetScreen(
 
                 }
             }
-
-
             Text(
                 "Результат составления букета",
                 fontFamily = fonts3,
@@ -331,12 +335,12 @@ fun BouquetScreen(
                     "cart",
                     modifier = Modifier
                         .height(29.dp)
-                        .clickable { cart.value += 1 },
+                        .clickable {
+                            viewModel.onEvent(BouquetEvents.OnCartClick)
+                                   },
                     contentScale = ContentScale.FillHeight
                 )
             }
         }
     }
-
-
 }

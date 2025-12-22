@@ -11,7 +11,9 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -24,6 +26,8 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.flowersshop.R
 import com.example.flowersshop.ui.Route
+import com.example.flowersshop.ui.pages.cart.CartRepository
+import kotlinx.coroutines.flow.map
 
 data class Btn(
     val icon: Int,
@@ -34,11 +38,21 @@ val buttons = listOf(
     Btn(R.drawable.home, Route.Main.route),
     Btn(R.drawable.bouquet, Route.Bouquet.route),
     Btn(R.drawable.favourites, Route.Favourites.route),
-    Btn(R.drawable.cart, Route.Profile.route),
+    Btn(R.drawable.cart, Route.Cart.route),
 )
 
 @Composable
-fun BottomNav(navController: NavController, modifier: Modifier, cart: MutableState<Int>) {
+fun BottomNav(
+    navController: NavController, modifier: Modifier,
+    cartRepository: CartRepository
+) {
+    LaunchedEffect(Unit) {
+        cartRepository.loadCart()
+    }
+    val count by cartRepository.items
+    .map { it.values.sum() }
+    .collectAsState(initial = 0)
+//    val count by viewModel.count.collectAsState()
     val currentPage = remember { mutableStateOf("main") }
     Row(
         modifier = modifier,
@@ -47,43 +61,6 @@ fun BottomNav(navController: NavController, modifier: Modifier, cart: MutableSta
     ) {
         repeat(buttons.size) { i ->
             val t = buttons[i]
-//            if (t.navigate == "profile") {
-//                Box(modifier = Modifier.size(27.dp)) {
-//                    Image(
-//                        imageVector = ImageVector.vectorResource(R.drawable.cart),
-//                        "cart",
-//
-//                        modifier = Modifier
-//                            .height(24.dp)
-//                            .align(Alignment.BottomStart),
-//                        contentScale = ContentScale.FillHeight
-//                    )
-//                    if (state.cartCount > 0 && t.navigate == "profile" ) {
-//                        Box(
-//                            modifier = Modifier
-//                                .size(14.dp)
-//                                .background(Color.White, shape = CircleShape)
-//                                .align(Alignment.TopEnd), contentAlignment = Alignment.Center
-//                        ) {
-//                            Box(
-//                                modifier = Modifier
-//                                    .size(11.dp)
-//                                    .background(Color.Red, shape = CircleShape)
-//                                    .align(Alignment.Center)
-//                            ) {
-//                                Text(
-//                                    text = state.cartCount.toString(),
-//                                    style = MainTheme.typography.headlineLarge,
-//                                    color = Color.White,
-//                                    fontSize = 9.sp,
-//                                    modifier = Modifier.align(Alignment.Center)
-//                                )
-//                            }
-//                        }
-//                    }
-//                }
-//            }
-//            else {
             Box(
                 modifier =
                     if (t.navigate == currentPage.value) {
@@ -98,7 +75,14 @@ fun BottomNav(navController: NavController, modifier: Modifier, cart: MutableSta
                             .background(Color.White, RoundedCornerShape(1.dp))
                             .clickable {
                                 currentPage.value = t.navigate
-                                navController.navigate(t.navigate)
+                                navController.navigate(t.navigate) {
+                                    launchSingleTop = true
+                                    restoreState = true
+                                    popUpTo(navController.graph.startDestinationId) {
+                                        saveState = true
+                                    }
+                                }
+//                                navController.navigate(t.navigate)
                             }
                     } else {
                         Modifier
@@ -116,7 +100,7 @@ fun BottomNav(navController: NavController, modifier: Modifier, cart: MutableSta
                     contentDescription = t.navigate,
                     modifier = Modifier.size(50.dp)
                 )
-                if (cart.value > 0 && t.navigate == "profile" ) {
+                if (count > 0 && t.navigate == Route.Cart.route) {
                     Box(
                         modifier = Modifier
                             .size(30.dp)
@@ -130,8 +114,7 @@ fun BottomNav(navController: NavController, modifier: Modifier, cart: MutableSta
                                 .align(Alignment.Center)
                         ) {
                             Text(
-                                text = cart.value.toString(),
-//                                style = MainTheme.typography.headlineLarge,
+                                text = count.toString(),
                                 color = Color.White,
                                 fontSize = 12.sp,
                                 modifier = Modifier.align(Alignment.Center)
@@ -139,12 +122,7 @@ fun BottomNav(navController: NavController, modifier: Modifier, cart: MutableSta
                         }
                     }
                 }
-
-
-
-
             }
-
         }
     }
 }

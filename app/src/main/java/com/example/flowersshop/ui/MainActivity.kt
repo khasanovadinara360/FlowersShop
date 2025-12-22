@@ -17,6 +17,7 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
+import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.flowersshop.domain.model.BouquetModel
@@ -25,21 +26,27 @@ import com.example.flowersshop.ui.components.BottomNav
 import com.example.flowersshop.ui.login.LoginScreen
 import com.example.flowersshop.ui.onb.OnbScreen
 import com.example.flowersshop.ui.pages.bouquet.BouquetScreen
+import com.example.flowersshop.ui.pages.cart.CartRepository
+import com.example.flowersshop.ui.pages.cart.CartScreen
+import com.example.flowersshop.ui.pages.cart.OrderScreen
 import com.example.flowersshop.ui.pages.fav.FavoriteScreen
 import com.example.flowersshop.ui.pages.main.MainScreen
-import com.example.flowersshop.ui.pages.profile.ProfileScreen
+import com.example.flowersshop.ui.signup.SignupScreen
 import com.example.flowersshop.ui.splash.SplashScreen
 import com.example.flowersshop.ui.theme.FlowersShopTheme
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 sealed class Route(val route: String) {
     data object Main : Route("main")
     data object Splash : Route("splash")
     data object Favourites : Route("favourite")
-    data object Profile : Route("profile")
+    data object Cart : Route("cart")
+    data object Order : Route("order")
     data object Onb : Route("onb")
     data object Bouquet : Route("bouquet")
     data object Login : Route("login")
+    data object Signup : Route("signup")
     data object BouquetCard : Route("bouquetCard/{bouquetId}") {
         fun createRoute(bouquetId: String) = "bouquetCard/$bouquetId"
     }
@@ -47,6 +54,9 @@ sealed class Route(val route: String) {
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+
+    @Inject
+    lateinit var cartRepository: CartRepository
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -59,30 +69,24 @@ class MainActivity : ComponentActivity() {
                 "splash",
                 "onb",
                 "login",
-                "bouquetCard"
+                "bouquetCard",
+                "order",
+                "signup"
             )
             val hideBottomBar = notBottomBars.any { route ->
                 currentRoute?.startsWith(route) == true
             }
-            val cartCount = remember { mutableStateOf(0) }
-            val favorites = mutableListOf<BouquetModel>(
-//                BouquetModel("1", "https://usbtrvwvcopzwhjczmzh.supabase.co/storage/v1/object/public/bouquets/bouquet1.png", "Букет 1", 1000),
-//                BouquetModel("2", "https://usbtrvwvcopzwhjczmzh.supabase.co/storage/v1/object/public/bouquets/bouquet2.png", "Букет 2", 2000),
-//                BouquetModel("3", "https://usbtrvwvcopzwhjczmzh.supabase.co/storage/v1/object/public/bouquets/bouquet3.png", "Букет 3", 3000),
-//                BouquetModel("4", "https://usbtrvwvcopzwhjczmzh.supabase.co/storage/v1/object/public/bouquets/bouquet4.png", "Букет 4", 4000),
-            )
             FlowersShopTheme(dynamicColor = false) {
                 Scaffold(
                     bottomBar = {
                         if (!hideBottomBar) {
                             BottomNav(
                                 navController,
+                                cartRepository = cartRepository,
                                 modifier = Modifier
                                     .navigationBarsPadding()
                                     .fillMaxWidth()
                                     .height(100.dp),
-                                //.background(Color.Yellow)//.padding(horizontal = 25.dp)
-                                cart = cartCount
                             )
                         }
 
@@ -90,21 +94,25 @@ class MainActivity : ComponentActivity() {
                 ) { innerPadding ->
                     NavHost(
                         navController = navController,
-                        startDestination = Route.Main.route,
+                        startDestination = Route.Splash.route,
                         modifier = Modifier.Companion
                             .padding(innerPadding)
                     ) {
                         composable(Route.Main.route) {
-                            MainScreen(navController, cartCount)
+                            MainScreen(navController)
                         }
                         composable(Route.Favourites.route) {
-                            FavoriteScreen(navController, favorites)
+                            FavoriteScreen(navController)
                         }
-                        composable(Route.Profile.route) {
-                            ProfileScreen(navController)
+                        composable(Route.Cart.route) {
+                            CartScreen(navController)
                         }
+                        composable(Route.Order.route) {
+                            OrderScreen(navController)
+                        }
+
                         composable(Route.Bouquet.route) {
-                            BouquetScreen(navController, cart = cartCount)
+                            BouquetScreen(navController)
                         }
                         composable(Route.Splash.route) {
                             SplashScreen(navController)
@@ -115,14 +123,17 @@ class MainActivity : ComponentActivity() {
                         composable(Route.Login.route) {
                             LoginScreen(navController)
                         }
+                        composable(Route.Signup.route) {
+                            SignupScreen(navController)
+                        }
                         composable(
                             route = Route.BouquetCard.route,
                             arguments = listOf(
-                            navArgument("bouquetId") {
-                                type = NavType.StringType
-                            }
-                        )) {
-                            BouquetCardScreen(navController, cartCount = cartCount)
+                                navArgument("bouquetId") {
+                                    type = NavType.StringType
+                                }
+                            )) {
+                            BouquetCardScreen(navController)
                         }
                     }
                 }

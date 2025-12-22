@@ -6,4 +6,5 @@ data class MainState(
     val categories: List<String> = emptyList(),
     val bouquets: List<BouquetModel> = emptyList(),
     val category: String = "",
+    val isSuccess: Boolean = false
 )

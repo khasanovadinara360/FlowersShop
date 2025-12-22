@@ -1,11 +1,13 @@
 package com.example.flowersshop.ui.pages.main
 
+import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.flowersshop.domain.usecase.GetBouquetsByCategoryUseCase
-import com.example.flowersshop.domain.usecase.GetCategoriesUseCase
+import com.example.flowersshop.domain.usecase.bouquets.GetBouquetsByCategoryUseCase
+import com.example.flowersshop.domain.usecase.bouquets.GetCategoriesUseCase
+import com.example.flowersshop.domain.usecase.cart.AddToCartUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -15,16 +17,14 @@ import javax.inject.Inject
 @HiltViewModel
 class MainViewModel @Inject constructor(
     private val getBouquetsByCategoryUseCase: GetBouquetsByCategoryUseCase,
-    private val getCategoriesUseCase: GetCategoriesUseCase
+    private val getCategoriesUseCase: GetCategoriesUseCase,
+    private val addToCartUseCase: AddToCartUseCase
 ): ViewModel() {
     private val _state = mutableStateOf(MainState())
     val state: State<MainState> = _state
 
-    fun getData() {
-        getCategories()
-    }
-
-    fun getCategories() {
+    val gridState = LazyGridState()
+    init {
         viewModelScope.launch(Dispatchers.IO) {
             val res = getCategoriesUseCase.execute()
             if (res.isSuccess) {
@@ -38,6 +38,8 @@ class MainViewModel @Inject constructor(
             }
         }
     }
+
+
     fun getBouquetsByCategory(category: String) {
         viewModelScope.launch(Dispatchers.IO) {
             val res = getBouquetsByCategoryUseCase.execute(category)
@@ -57,6 +59,16 @@ class MainViewModel @Inject constructor(
                     category = event.value
                 )
                 getBouquetsByCategory(_state.value.category)
+            }
+            is MainEvents.OnCartClick -> {
+                viewModelScope.launch{
+                    val res = addToCartUseCase.execute(event.value, 1)
+                    if (res.isSuccess) {
+                        _state.value = _state.value.copy(
+                            isSuccess = true
+                        )
+                    }
+                }
             }
         }
     }

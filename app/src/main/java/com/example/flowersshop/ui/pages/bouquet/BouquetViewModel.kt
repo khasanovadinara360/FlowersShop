@@ -4,9 +4,11 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.flowersshop.domain.usecase.GetBouquetBuildUseCase
-import com.example.flowersshop.domain.usecase.GetItemsByCategory
-import com.example.flowersshop.domain.usecase.GetItemsUseCase
+import com.example.flowersshop.domain.usecase.bouquets.AddBuildBouquetUseCase
+import com.example.flowersshop.domain.usecase.bouquets.GetBouquetBuildUseCase
+import com.example.flowersshop.domain.usecase.cart.AddBuildToCartUseCase
+import com.example.flowersshop.domain.usecase.items.GetItemsByCategory
+import com.example.flowersshop.ui.pages.cart.CartRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -15,9 +17,11 @@ import javax.inject.Inject
 
 @HiltViewModel
 class BouquetViewModel @Inject constructor(
-    private val getItems: GetItemsUseCase,
     private val getItemsByCategory: GetItemsByCategory,
-    private val getBouquetBuildUseCase: GetBouquetBuildUseCase
+    private val getBouquetBuildUseCase: GetBouquetBuildUseCase,
+    private val addBuildBouquetUseCase: AddBuildBouquetUseCase,
+    private val addBuildToCartUseCase: AddBuildToCartUseCase,
+    private val cartRepository: CartRepository
 ) : ViewModel() {
     private val _state = mutableStateOf(BouquetState())
     val state: State<BouquetState> = _state
@@ -60,7 +64,7 @@ class BouquetViewModel @Inject constructor(
                 _state.value = _state.value.copy(
 //                    flower = event.value,
                     items = _state.value.items + event.value,
-                    coast = _state.value.coast + event.value.coast,
+                    coast = _state.value.coast + event.value.coast * _state.value.flowersCount,
                     page = _state.value.page + 1
 
                 )
@@ -70,7 +74,7 @@ class BouquetViewModel @Inject constructor(
                 _state.value = _state.value.copy(
 //                    green = event.value,
                     items = _state.value.items + event.value,
-                    coast = _state.value.coast + event.value.coast,
+                    coast = _state.value.coast + event.value.coast * _state.value.greensCount,
                     page = _state.value.page + 1
                 )
                 getBouquetBuild(_state.value.items[0].id, _state.value.items[1].id)
@@ -80,7 +84,7 @@ class BouquetViewModel @Inject constructor(
                 _state.value = _state.value.copy(
 //                    pack = event.value,
                     items = _state.value.items + event.value,
-                    coast = _state.value.coast + event.value.coast,
+                    coast = _state.value.coast + event.value.coast * _state.value.packsCount,
                     page = _state.value.page + 1
                 )
             }
@@ -89,7 +93,7 @@ class BouquetViewModel @Inject constructor(
                 _state.value = _state.value.copy(
 //                    card = event.value,
                     items = _state.value.items + event.value,
-                    coast = _state.value.coast + event.value.coast,
+                    coast = _state.value.coast + event.value.coast * _state.value.cardsCount,
                     page = _state.value.page + 1
                 )
             }
@@ -164,6 +168,26 @@ class BouquetViewModel @Inject constructor(
                                 coast = _state.value.coast + event.item.coast * _state.value.cardsCount
 
                             )
+                        }
+                    }
+                }
+            }
+            BouquetEvents.OnCartClick -> {
+                val flowerId = _state.value.items[0].id
+                val greenId = _state.value.items[1].id
+                val packId = _state.value.items[2].id
+                val cardId = _state.value.items[3].id
+
+                viewModelScope.launch{
+
+                    val res = addBuildBouquetUseCase.execute(flowerId, greenId, packId, cardId, _state.value.coast)
+                    if (res.isSuccess) {
+                        val resCart = addBuildToCartUseCase.execute(res.getOrNull()!!.id!!)
+                        if (resCart.isSuccess) {
+                            _state.value = _state.value.copy(
+                                isSuccess = true
+                            )
+                            cartRepository.add(res.getOrNull()!!.id!!)
                         }
                     }
                 }

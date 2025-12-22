@@ -13,7 +13,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -23,6 +22,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import coil.ImageLoader
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
@@ -35,11 +35,14 @@ import java.util.concurrent.TimeUnit
 @Composable
 fun BouquetCard(
     modifier: Modifier = Modifier,
+    productId: String,
     imageUrl: String,
     title: String,
     desc: String,
     coast: Long,
-    cartCount: MutableState<Int>
+    viewModel: CartCommonViewModel = hiltViewModel(),
+    action: () -> Unit
+//    cartCount: MutableState<Int>
 ) {
     val imageLoader = ImageLoader.Builder(LocalContext.current)
         .okHttpClient {
@@ -96,7 +99,7 @@ fun BouquetCard(
                 fontSize = 8.sp,
                 fontFamily = fonts3,
                 color = Color(0xFF0A1F33),
-                maxLines = 3,
+                maxLines = 1,
             )
 
             Spacer(Modifier.height(15.dp))
@@ -107,7 +110,10 @@ fun BouquetCard(
                     .width(80.dp)
                     .clip(RoundedCornerShape(9.dp))
                     .background(Color(0xFF532A2A))
-                    .clickable { cartCount.value += 1 }
+                    .clickable {
+                        action()
+                        viewModel.addToCart(productId)
+                    }
                     .align(Alignment.CenterHorizontally),
                 contentAlignment = Alignment.Center
             ) {

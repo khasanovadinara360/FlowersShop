@@ -1,4 +1,4 @@
-package com.example.flowersshop.domain.usecase
+package com.example.flowersshop.domain.usecase.bouquets
 
 import com.example.flowersshop.domain.model.BouquetModel
 import com.example.flowersshop.domain.repository.BouquetsRepository

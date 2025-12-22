@@ -31,4 +31,17 @@ class ItemsRepositoryImpl: ItemsRepository {
             emptyList()
         }
     }
+
+    override suspend fun getItemById(itemId: String): Result<ItemModel> {
+        return try {
+            val res = client.postgrest["items"].select {
+                filter {
+                    eq("id", itemId)
+                }
+            }.decodeSingle<ItemModelDto>().toDomain()
+            Result.success(res)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
 }
