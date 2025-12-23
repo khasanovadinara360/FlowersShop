@@ -1,12 +1,8 @@
 package com.example.flowersshop.data.repository
 
 import com.example.flowersshop.data.InitSupabaseClient.client
-import com.example.flowersshop.data.dto.CartModelDto
-import com.example.flowersshop.data.dto.CustomBouquetModelDto
 import com.example.flowersshop.data.dto.OrderItemsModelDto
 import com.example.flowersshop.data.dto.OrderModelDto
-import com.example.flowersshop.domain.model.BouquetModel
-import com.example.flowersshop.domain.model.CustomBouquetModel
 import com.example.flowersshop.domain.repository.OrderRepository
 import io.github.jan.supabase.gotrue.auth
 import io.github.jan.supabase.postgrest.postgrest
@@ -31,7 +27,7 @@ class OrderRepositoryImpl : OrderRepository {
                     userId = userId,
                     payment = payment,
                     delivery = delivery,
-                    phone = phone.toString(),
+                    phone = phone,
                     address = address,
                     totalPrice = totalCoast,
                     comment = comment
@@ -49,7 +45,6 @@ class OrderRepositoryImpl : OrderRepository {
                 )
             }
             customBouquets.forEach { i ->
-
                 client.postgrest["order_items"].insert(
                     OrderItemsModelDto(
                         orderId = res.id!!,

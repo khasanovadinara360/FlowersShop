@@ -26,7 +26,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.flowersshop.R
 import com.example.flowersshop.ui.Route
-import com.example.flowersshop.ui.pages.cart.CartRepository
+import com.example.flowersshop.domain.repository.LocalCartRepository
 import kotlinx.coroutines.flow.map
 
 data class Btn(
@@ -44,7 +44,7 @@ val buttons = listOf(
 @Composable
 fun BottomNav(
     navController: NavController, modifier: Modifier,
-    cartRepository: CartRepository
+    cartRepository: LocalCartRepository
 ) {
     LaunchedEffect(Unit) {
         cartRepository.loadCart()

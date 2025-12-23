@@ -1,4 +1,4 @@
-package com.example.flowersshop.ui.pages.cart
+package com.example.flowersshop.ui.cart
 
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.flowersshop.domain.model.CartModel
 import com.example.flowersshop.domain.model.ItemModel
+import com.example.flowersshop.domain.repository.LocalCartRepository
 import com.example.flowersshop.domain.usecase.bouquets.GetBouquetByIdUseCase
 import com.example.flowersshop.domain.usecase.bouquets.GetBuildBouquetUseCase
 import com.example.flowersshop.domain.usecase.cart.ClearCartUseCase
@@ -24,7 +25,7 @@ class CartViewModel @Inject constructor(
     private val getBouquetByIdUseCase: GetBouquetByIdUseCase,
     private val getBuildBouquetUseCase: GetBuildBouquetUseCase,
     private val getItemByIdUseCase: GetItemByIdUseCase,
-    private val cartRepository: CartRepository,
+    private val cartRepository: LocalCartRepository,
     private val updateCartUseCase: UpdateCartUseCase,
     private val clearCartUseCase: ClearCartUseCase
 ) : ViewModel() {
@@ -196,6 +197,20 @@ class CartViewModel @Inject constructor(
                         )
                     }
                 }
+            }
+            CartEvents.OrderClick -> {
+//                if (_state.value.products.isEmpty()) {
+                    _state.value = _state.value.copy(
+                        errorMessage = "Корзина пуста",
+                        isError = _state.value.products.isEmpty(),
+                        isSuccess = !_state.value.isError
+                    )
+//                }
+            }
+            CartEvents.DismissClick -> {
+                _state.value = _state.value.copy(
+                    isError = false,
+                )
             }
         }
     }

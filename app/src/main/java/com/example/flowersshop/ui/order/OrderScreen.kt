@@ -1,4 +1,4 @@
-package com.example.flowersshop.ui.pages.cart
+package com.example.flowersshop.ui.order
 
 import android.widget.Toast
 import androidx.compose.foundation.background
@@ -18,7 +18,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
@@ -36,13 +35,14 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.flowersshop.ui.Route
+import com.example.flowersshop.ui.cart.CartItem
 import com.example.flowersshop.ui.components.Logo
+import com.example.flowersshop.ui.components.MyDialog
 import com.example.flowersshop.ui.order.OrderEvents
 import com.example.flowersshop.ui.theme.brown
 import com.example.flowersshop.ui.theme.fonts3
 import com.example.flowersshop.ui.theme.fonts4
 import com.example.flowersshop.ui.theme.gray
-import kotlinx.coroutines.launch
 
 @Composable
 fun OrderScreen(navController: NavController, viewModel: OrderViewModel = hiltViewModel()) {
@@ -71,7 +71,7 @@ fun OrderScreen(navController: NavController, viewModel: OrderViewModel = hiltVi
             fontSize = 30.sp,
             modifier = Modifier
                 .align(Alignment.CenterHorizontally)
-                .padding(vertical = 30.dp),
+                .padding(bottom = 15.dp),
             color = Color.Black
         )
         val scrollState = rememberScrollState()
@@ -84,7 +84,7 @@ fun OrderScreen(navController: NavController, viewModel: OrderViewModel = hiltVi
             verticalArrangement = Arrangement.spacedBy(5.dp)
         )
         {
-            item() {
+            item {
                 Column()
                 {
                     Text(
@@ -93,7 +93,7 @@ fun OrderScreen(navController: NavController, viewModel: OrderViewModel = hiltVi
                         fontSize = 16.sp,
                         modifier = Modifier
                             .align(Alignment.CenterHorizontally)
-                            .padding(bottom = 25.dp),
+                            .padding(bottom = 10.dp),
                         color = brown
                     )
                     Row()
@@ -495,8 +495,6 @@ fun OrderScreen(navController: NavController, viewModel: OrderViewModel = hiltVi
 
                 }
             }
-
-
         }
         Row(
             modifier = Modifier
@@ -506,7 +504,6 @@ fun OrderScreen(navController: NavController, viewModel: OrderViewModel = hiltVi
             verticalAlignment = Alignment.CenterVertically
         )
         {
-            val coroutineScope = rememberCoroutineScope()
             Box(
                 modifier = Modifier
                     .clip(RoundedCornerShape(19.dp))
@@ -545,8 +542,10 @@ fun OrderScreen(navController: NavController, viewModel: OrderViewModel = hiltVi
                 )
             }
         }
+        MyDialog("Ошибка", state.errorMessage, state.isError) {
+            viewModel.onEvent(OrderEvents.OnDismissClick)
+        }
     }
-
 }
 
 @Composable
@@ -590,5 +589,4 @@ fun OrderTextField(value: String, onValueChange: (String) -> Unit, modifier: Mod
             color = Color.Black
         )
     )
-
 }

@@ -1,4 +1,4 @@
-package com.example.flowersshop.ui.pages.fav
+package com.example.flowersshop.ui.fav
 
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
@@ -26,7 +26,6 @@ class FavouriteViewModel @Inject constructor(
                     _state.value = _state.value.copy(
                         products = res.getOrNull()!!,
                         isLoading = false
-
                     )
                 }
             }

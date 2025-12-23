@@ -1,7 +1,5 @@
 package com.example.flowersshop.ui.order
 
-import com.example.flowersshop.ui.pages.cart.CartEvents
-
 interface OrderEvents {
 
     data class OnAddressChange(val address: String): OrderEvents
@@ -13,4 +11,5 @@ interface OrderEvents {
     data class AddClick(val index: Int): OrderEvents
     data class DelClick(val index: Int): OrderEvents
     data class OnOrderClick(val index: Int): OrderEvents
+    data object OnDismissClick: OrderEvents
 }

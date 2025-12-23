@@ -1,4 +1,4 @@
-package com.example.flowersshop.ui.pages.main
+package com.example.flowersshop.ui.main
 
 import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.runtime.State

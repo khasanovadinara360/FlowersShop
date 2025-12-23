@@ -1,4 +1,4 @@
-package com.example.flowersshop.ui.bouquet
+package com.example.flowersshop.ui.bouquet_card
 
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
@@ -10,7 +10,7 @@ import com.example.flowersshop.domain.usecase.cart.AddToCartUseCase
 import com.example.flowersshop.domain.usecase.favourite.AddFavouriteUseCase
 import com.example.flowersshop.domain.usecase.favourite.DelFavouriteUseCase
 import com.example.flowersshop.domain.usecase.favourite.IsBouquetFavouriteUseCase
-import com.example.flowersshop.ui.pages.cart.CartRepository
+import com.example.flowersshop.domain.repository.LocalCartRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -26,7 +26,7 @@ class BouquetCardViewModel @Inject constructor(
     private val isBouquetFavouriteUseCase: IsBouquetFavouriteUseCase,
     private val delFavouriteUseCase: DelFavouriteUseCase,
     private val addToCartUseCase: AddToCartUseCase,
-    private val cartRepository: CartRepository
+    private val cartRepository: LocalCartRepository
 ) : ViewModel() {
 
     private val _state = mutableStateOf(BouquetCardState())

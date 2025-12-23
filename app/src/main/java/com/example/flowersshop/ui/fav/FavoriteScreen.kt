@@ -1,4 +1,4 @@
-package com.example.flowersshop.ui.pages.fav
+package com.example.flowersshop.ui.fav
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column

@@ -1,4 +1,4 @@
-package com.example.flowersshop.ui.pages.cart
+package com.example.flowersshop.ui.cart
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -21,6 +21,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -32,10 +33,12 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
-import androidx.navigation.compose.currentBackStackEntryAsState
 import com.example.flowersshop.ui.Route
 import com.example.flowersshop.ui.components.Logo
+import com.example.flowersshop.ui.components.MyDialog
+import com.example.flowersshop.ui.order.OrderEvents
 import com.example.flowersshop.ui.theme.fonts3
 import com.example.flowersshop.ui.theme.fonts4
 import kotlinx.coroutines.launch
@@ -43,26 +46,12 @@ import kotlinx.coroutines.launch
 @Composable
 fun CartScreen(navController: NavController, viewModel: CartViewModel = hiltViewModel()) {
     val state = viewModel.state.value
-//    val lifecycleOwner = LocalLifecycleOwner.current
-//    val navBackStackEntry = navController.currentBackStackEntryAsState().value
-//    val currentRoute = navBackStackEntry?.destination?.route
-//
-//    DisposableEffect(lifecycleOwner, currentRoute) {
-//
-//        val observer = LifecycleEventObserver { _, event ->
-//            if (event == Lifecycle.Event.ON_STOP) {
-//                if (currentRoute != Route.Order.route) {
-//                    viewModel.updateCart()
-//                }
-//            }
-//        }
-//
-//        lifecycleOwner.lifecycle.addObserver(observer)
-//
-//        onDispose {
-//            lifecycleOwner.lifecycle.removeObserver(observer)
-//        }
-//    }
+    LaunchedEffect(state.isSuccess) {
+        if (state.isSuccess) {
+            navController.navigate(Route.Order.route)
+
+        }
+    }
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -316,11 +305,9 @@ fun CartScreen(navController: NavController, viewModel: CartViewModel = hiltView
                         .weight(1f)
                         .fillMaxHeight()
                         .clickable {
-                            coroutineScope.launch {
-
-                                viewModel.updateCart()
-                                navController.navigate(Route.Order.route)
-                            }
+                            viewModel.onEvent(CartEvents.OrderClick)
+//                            val orderBackStackEntry = navController.getBackStackEntry(Route.Order.route)
+//                            orderBackStackEntry.savedStateHandle["products"] = viewModel.state.value.products
                         },
                     contentAlignment = Alignment.Center
                 ) {
@@ -350,6 +337,9 @@ fun CartScreen(navController: NavController, viewModel: CartViewModel = hiltView
                     )
                 }
             }
+        }
+        MyDialog("Ошибка", state.errorMessage, state.isError) {
+            viewModel.onEvent(CartEvents.DismissClick)
         }
     }
 }

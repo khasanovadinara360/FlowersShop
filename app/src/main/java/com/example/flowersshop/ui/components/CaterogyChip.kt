@@ -12,8 +12,8 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.example.flowersshop.ui.pages.main.MainEvents
-import com.example.flowersshop.ui.pages.main.MainViewModel
+import com.example.flowersshop.ui.main.MainEvents
+import com.example.flowersshop.ui.main.MainViewModel
 
 @Composable
 fun CategoryChip(title: String, selected: Boolean = false, viewModel: MainViewModel) {

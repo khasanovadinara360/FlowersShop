@@ -1,4 +1,4 @@
-package com.example.flowersshop.ui.pages.cart
+package com.example.flowersshop.domain.repository
 
 import android.util.Log
 import com.example.flowersshop.domain.usecase.cart.GetCartUseCase
@@ -8,7 +8,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class CartRepository @Inject constructor(
+class LocalCartRepository @Inject constructor(
     private val getCartUseCase: GetCartUseCase
 ) {
 
@@ -16,15 +16,15 @@ class CartRepository @Inject constructor(
     val items = _items.asStateFlow()
 
     suspend fun loadCart() {
-            val res = getCartUseCase.execute()
-            if (res.isSuccess) {
-                val newItems = mutableMapOf<String, Int>()
-                res.getOrNull()?.forEach { i ->
-                    val id = i.productId ?: i.customProductId!!
-                    newItems[id] = i.volume
-                }
-                _items.value = newItems
+        val res = getCartUseCase.execute()
+        if (res.isSuccess) {
+            val newItems = mutableMapOf<String, Int>()
+            res.getOrNull()?.forEach { i ->
+                val id = i.productId ?: i.customProductId!!
+                newItems[id] = i.volume
             }
+            _items.value = newItems
+        }
 
     }
 

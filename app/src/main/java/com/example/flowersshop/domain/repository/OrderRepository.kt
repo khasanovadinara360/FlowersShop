@@ -1,8 +1,5 @@
 package com.example.flowersshop.domain.repository
 
-import com.example.flowersshop.domain.model.BouquetModel
-import com.example.flowersshop.domain.model.CustomBouquetModel
-
 interface OrderRepository {
     suspend fun addOrder(
         totalCoast: Long,

@@ -1,4 +1,4 @@
-package com.example.flowersshop.ui.pages.bouquet
+package com.example.flowersshop.ui.bouquet
 
 import android.util.Log
 import android.widget.Toast

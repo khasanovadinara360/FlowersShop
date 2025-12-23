@@ -1,4 +1,4 @@
-package com.example.flowersshop.ui.pages.cart
+package com.example.flowersshop.ui.cart
 
 import com.example.flowersshop.domain.model.ItemModel
 
@@ -6,6 +6,10 @@ data class CartState(
     val totalCoast: Long = 0,
     val products: List<CartItem> = emptyList(),
     val isLoading: Boolean = true,
+    val isError: Boolean = true,
+    val isSuccess: Boolean = false,
+    val errorMessage: String = ""
+
 
 )
 sealed class CartItem {

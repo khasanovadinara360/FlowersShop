@@ -1,4 +1,4 @@
-package com.example.flowersshop.ui.pages.main
+package com.example.flowersshop.ui.main
 
 import android.widget.Toast
 import androidx.annotation.DrawableRes
@@ -24,7 +24,6 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip

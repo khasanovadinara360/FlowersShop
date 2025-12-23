@@ -89,7 +89,10 @@ fun SignupScreen(navController: NavController, viewModel: SignupViewModel = hilt
                     focusedIndicatorColor = Color.Transparent,
                     unfocusedIndicatorColor = Color.Transparent,
                 ),
-                textStyle = TextStyle(fontFamily = fonts4, color = Color.Black)
+                textStyle = TextStyle(fontFamily = fonts4, color = Color.Black),
+                placeholder = {
+                    Text("Имя", fontFamily = fonts4, color = Color.Black.copy(alpha = 0.5f), modifier = Modifier.padding(start = 20.dp))
+                }
 
             )
             TextField(
@@ -105,7 +108,10 @@ fun SignupScreen(navController: NavController, viewModel: SignupViewModel = hilt
                     focusedIndicatorColor = Color.Transparent,
                     unfocusedIndicatorColor = Color.Transparent,
                 ),
-                textStyle = TextStyle(fontFamily = fonts4, color = Color.Black)
+                textStyle = TextStyle(fontFamily = fonts4, color = Color.Black),
+                placeholder = {
+                    Text("Почта", fontFamily = fonts4, color = Color.Black.copy(alpha = 0.5f), modifier = Modifier.padding(start = 20.dp))
+                }
 
             )
             TextField(
@@ -121,7 +127,10 @@ fun SignupScreen(navController: NavController, viewModel: SignupViewModel = hilt
                     focusedIndicatorColor = Color.Transparent,
                     unfocusedIndicatorColor = Color.Transparent,
                 ),
-                textStyle = TextStyle(fontFamily = fonts4, color = Color.Black)
+                textStyle = TextStyle(fontFamily = fonts4, color = Color.Black),
+                placeholder = {
+                    Text("Пароль", fontFamily = fonts4, color = Color.Black.copy(alpha = 0.5f), modifier = Modifier.padding(start = 20.dp))
+                }
 
             )
             Button(

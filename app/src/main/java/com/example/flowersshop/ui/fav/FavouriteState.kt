@@ -1,4 +1,4 @@
-package com.example.flowersshop.ui.pages.fav
+package com.example.flowersshop.ui.fav
 
 import com.example.flowersshop.domain.model.BouquetModel
 

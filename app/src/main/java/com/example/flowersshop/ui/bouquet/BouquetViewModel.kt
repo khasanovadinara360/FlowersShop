@@ -1,4 +1,4 @@
-package com.example.flowersshop.ui.pages.bouquet
+package com.example.flowersshop.ui.bouquet
 
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
@@ -8,7 +8,7 @@ import com.example.flowersshop.domain.usecase.bouquets.AddBuildBouquetUseCase
 import com.example.flowersshop.domain.usecase.bouquets.GetBouquetBuildUseCase
 import com.example.flowersshop.domain.usecase.cart.AddBuildToCartUseCase
 import com.example.flowersshop.domain.usecase.items.GetItemsByCategory
-import com.example.flowersshop.ui.pages.cart.CartRepository
+import com.example.flowersshop.domain.repository.LocalCartRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -21,7 +21,7 @@ class BouquetViewModel @Inject constructor(
     private val getBouquetBuildUseCase: GetBouquetBuildUseCase,
     private val addBuildBouquetUseCase: AddBuildBouquetUseCase,
     private val addBuildToCartUseCase: AddBuildToCartUseCase,
-    private val cartRepository: CartRepository
+    private val cartRepository: LocalCartRepository
 ) : ViewModel() {
     private val _state = mutableStateOf(BouquetState())
     val state: State<BouquetState> = _state
@@ -136,7 +136,7 @@ class BouquetViewModel @Inject constructor(
                         if (_state.value.flowersCount > 1) {
                             _state.value = _state.value.copy(
                                 flowersCount = _state.value.flowersCount - 1,
-                                coast = _state.value.coast + event.item.coast * _state.value.flowersCount
+                                coast = _state.value.coast - event.item.coast
                             )
                         }
                     }
@@ -145,7 +145,7 @@ class BouquetViewModel @Inject constructor(
                         if (_state.value.greensCount > 1) {
                             _state.value = _state.value.copy(
                                 greensCount = _state.value.greensCount - 1,
-                                coast = _state.value.coast + event.item.coast * _state.value.greensCount
+                                coast = _state.value.coast - event.item.coast
 
                             )
                         }
@@ -155,7 +155,7 @@ class BouquetViewModel @Inject constructor(
                         if (_state.value.packsCount > 1) {
                             _state.value = _state.value.copy(
                                 packsCount = _state.value.packsCount - 1,
-                                coast = _state.value.coast + event.item.coast * _state.value.packsCount
+                                coast = _state.value.coast - event.item.coast
 
                             )
                         }
@@ -165,7 +165,7 @@ class BouquetViewModel @Inject constructor(
                         if (_state.value.cardsCount > 1) {
                             _state.value = _state.value.copy(
                                 cardsCount = _state.value.cardsCount - 1,
-                                coast = _state.value.coast + event.item.coast * _state.value.cardsCount
+                                coast = _state.value.coast - event.item.coast
 
                             )
                         }

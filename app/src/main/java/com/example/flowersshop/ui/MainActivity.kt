@@ -9,28 +9,24 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
-import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.example.flowersshop.domain.model.BouquetModel
-import com.example.flowersshop.ui.bouquet.BouquetCardScreen
+import com.example.flowersshop.ui.bouquet_card.BouquetCardScreen
+import com.example.flowersshop.domain.repository.LocalCartRepository
 import com.example.flowersshop.ui.components.BottomNav
 import com.example.flowersshop.ui.login.LoginScreen
 import com.example.flowersshop.ui.onb.OnbScreen
-import com.example.flowersshop.ui.pages.bouquet.BouquetScreen
-import com.example.flowersshop.ui.pages.cart.CartRepository
-import com.example.flowersshop.ui.pages.cart.CartScreen
-import com.example.flowersshop.ui.pages.cart.OrderScreen
-import com.example.flowersshop.ui.pages.fav.FavoriteScreen
-import com.example.flowersshop.ui.pages.main.MainScreen
+import com.example.flowersshop.ui.bouquet.BouquetScreen
+import com.example.flowersshop.ui.cart.CartScreen
+import com.example.flowersshop.ui.order.OrderScreen
+import com.example.flowersshop.ui.fav.FavoriteScreen
+import com.example.flowersshop.ui.main.MainScreen
 import com.example.flowersshop.ui.signup.SignupScreen
 import com.example.flowersshop.ui.splash.SplashScreen
 import com.example.flowersshop.ui.theme.FlowersShopTheme
@@ -56,7 +52,7 @@ sealed class Route(val route: String) {
 class MainActivity : ComponentActivity() {
 
     @Inject
-    lateinit var cartRepository: CartRepository
+    lateinit var cartRepository: LocalCartRepository
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -94,7 +90,7 @@ class MainActivity : ComponentActivity() {
                 ) { innerPadding ->
                     NavHost(
                         navController = navController,
-                        startDestination = Route.Splash.route,
+                        startDestination = Route.Main.route,
                         modifier = Modifier.Companion
                             .padding(innerPadding)
                     ) {
@@ -107,7 +103,7 @@ class MainActivity : ComponentActivity() {
                         composable(Route.Cart.route) {
                             CartScreen(navController)
                         }
-                        composable(Route.Order.route) {
+                        composable(Route.Order.route) { backStackEntry ->
                             OrderScreen(navController)
                         }
 

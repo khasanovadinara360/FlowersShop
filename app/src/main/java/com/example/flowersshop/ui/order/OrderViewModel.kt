@@ -1,20 +1,18 @@
-package com.example.flowersshop.ui.pages.cart
+package com.example.flowersshop.ui.order
 
 import androidx.compose.runtime.State
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.flowersshop.domain.model.BouquetModel
-import com.example.flowersshop.domain.model.ItemModel
 import com.example.flowersshop.domain.usecase.bouquets.GetBouquetByIdUseCase
 import com.example.flowersshop.domain.usecase.bouquets.GetBuildBouquetUseCase
-import com.example.flowersshop.domain.usecase.cart.ClearCartUseCase
 import com.example.flowersshop.domain.usecase.cart.GetCartUseCase
-import com.example.flowersshop.domain.usecase.cart.UpdateCartUseCase
-import com.example.flowersshop.domain.usecase.items.GetItemByIdUseCase
 import com.example.flowersshop.domain.usecase.order.AddOrderUseCase
-import com.example.flowersshop.ui.order.OrderEvents
-import com.example.flowersshop.ui.order.OrderState
+import com.example.flowersshop.ui.cart.CartItem
+import com.example.flowersshop.domain.repository.LocalCartRepository
+import com.example.flowersshop.domain.usecase.user.GetUserUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -26,14 +24,36 @@ class OrderViewModel @Inject constructor(
     private val getCartUseCase: GetCartUseCase,
     private val getBouquetByIdUseCase: GetBouquetByIdUseCase,
     private val getBuildBouquetUseCase: GetBuildBouquetUseCase,
-    private val cartRepository: CartRepository,
-    private val addOrderUseCase: AddOrderUseCase
+    private val cartRepository: LocalCartRepository,
+    private val addOrderUseCase: AddOrderUseCase,
+    savedStateHandle: SavedStateHandle,
+    private val getUserUseCase: GetUserUseCase
 ) : ViewModel() {
     private val _state = mutableStateOf(OrderState())
     val state: State<OrderState> = _state
 
+//    val products = savedStateHandle.getStateFlow("products", emptyList<CartItem>())
+
     init {
+//        val products = savedStateHandle.get<List<CartItem>>("products") ?: emptyList()
+//        _state.value = _state.value.copy(
+//            products = products,
+//            isLoading = false
+//        )
+
+
         viewModelScope.launch(Dispatchers.IO) {
+            val user = getUserUseCase.execute()
+            if (user.isSuccess) {
+                _state.value = _state.value.copy(
+                    name = user.getOrNull()!!.name
+                )
+            } else {
+                _state.value = _state.value.copy(
+                    isError = true,
+                    errorMessage = user.exceptionOrNull()!!.message.toString()
+                )
+            }
             val res = getCartUseCase.execute()
             if (res.isSuccess) {
                 res.getOrNull()!!.forEach { i ->
@@ -189,17 +209,6 @@ class OrderViewModel @Inject constructor(
 
             is OrderEvents.OnOrderClick -> {
                 viewModelScope.launch {
-
-//                    val listProducts: List<String> = _state.value.products.map { i ->
-//                        when (i) {
-//                            is CartItem.CartBouquet -> {
-//                                i.id
-//                            }
-//                            is CartItem.CustomBouquet -> {
-//                                i.id
-//                            }
-//                        }
-//                    }
                     val listProducts: List<String> = _state.value.products
                         .filterIsInstance<CartItem.CartBouquet>()
                         .map { it.id }
@@ -208,21 +217,24 @@ class OrderViewModel @Inject constructor(
                         .filterIsInstance<CartItem.CustomBouquet>()
                         .map { it.id }
 
-                    val res = addOrderUseCase.execute(
-                        _state.value.totalCoast,
-                        _state.value.address,
-                        _state.value.payment,
-                        _state.value.delivery,
-                        _state.value.phone,
-                        _state.value.comment,
-                        listProducts,
-                        listCustomProducts,
-
-
-                        )
-                    if (res.isSuccess) {
+                    if (_state.value.address.isEmpty()) {
                         _state.value = _state.value.copy(
-                            isSuccess = true
+                            isError = true,
+                            errorMessage = "Заполните адрес доставки"
+                        )
+                    } else {
+                        val res = addOrderUseCase.execute(
+                            _state.value.totalCoast,
+                            _state.value.address,
+                            _state.value.payment,
+                            _state.value.delivery,
+                            _state.value.phone,
+                            _state.value.comment,
+                            listProducts,
+                            listCustomProducts,
+                            )
+                        _state.value = _state.value.copy(
+                            isSuccess = res.isSuccess
                         )
                     }
                 }
@@ -240,13 +252,18 @@ class OrderViewModel @Inject constructor(
                     totalCoast = if (event.delivery == "Доставка" && event.delivery != _state.value.delivery) {
                         _state.value.totalCoast + 200
                     } else {
-                        if (event.delivery == "Самовывоз" && event.delivery != _state.value.delivery){
+                        if (event.delivery == "Самовывоз" && event.delivery != _state.value.delivery) {
                             _state.value.totalCoast - 200
-                        }
-                        else {
+                        } else {
                             _state.value.totalCoast
                         }
                     }
+                )
+            }
+
+            OrderEvents.OnDismissClick -> {
+                _state.value = _state.value.copy(
+                    isError = false
                 )
             }
         }

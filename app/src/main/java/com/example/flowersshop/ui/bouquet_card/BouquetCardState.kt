@@ -1,4 +1,4 @@
-package com.example.flowersshop.ui.bouquet
+package com.example.flowersshop.ui.bouquet_card
 
 import com.example.flowersshop.domain.model.BouquetModel
 

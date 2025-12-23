@@ -1,7 +1,5 @@
 package com.example.flowersshop.domain.usecase.order
 
-import com.example.flowersshop.domain.model.BouquetModel
-import com.example.flowersshop.domain.model.CustomBouquetModel
 import com.example.flowersshop.domain.repository.OrderRepository
 
 class AddOrderUseCase(

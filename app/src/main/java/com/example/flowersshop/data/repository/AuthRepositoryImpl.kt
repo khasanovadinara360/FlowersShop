@@ -1,6 +1,7 @@
 package com.example.flowersshop.data.repository
 
 import com.example.flowersshop.data.InitSupabaseClient.client
+import com.example.flowersshop.data.dto.UserModelDto
 import com.example.flowersshop.domain.repository.AuthRepository
 import io.github.jan.supabase.gotrue.auth
 import io.github.jan.supabase.gotrue.providers.builtin.Email
@@ -21,17 +22,16 @@ class AuthRepositoryImpl(): AuthRepository {
 
     override suspend fun signUp(email: String, password: String, name: String, ): Result<Unit> {
         return try {
-            val res =  client.auth.signUpWith(Email) {
+            client.auth.signUpWith(Email) {
                 this.email = email
                 this.password = password
             }
-//            if (res.is)
             val user = client.auth.currentUserOrNull()
             if (user != null) {
                 client.postgrest["users"].insert(
-                    mapOf(
-                        "id" to user.id,
-                        "name" to name
+                    UserModelDto(
+                        id = user.id,
+                        name = name
                     )
                 )
             }

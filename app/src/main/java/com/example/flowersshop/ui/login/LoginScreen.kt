@@ -88,7 +88,10 @@ fun LoginScreen(navController: NavController, viewModel: LoginViewModel = hiltVi
                     focusedIndicatorColor = Color.Transparent,
                     unfocusedIndicatorColor = Color.Transparent,
                 ),
-                textStyle = TextStyle(fontFamily = fonts4, color = Color.Black)
+                textStyle = TextStyle(fontFamily = fonts4, color = Color.Black),
+                placeholder = {
+                    Text("Почта", fontFamily = fonts4, color = Color.Black.copy(alpha = 0.5f), modifier = Modifier.padding(start = 20.dp))
+                }
             )
             TextField(
                 value = state.password,
@@ -103,15 +106,11 @@ fun LoginScreen(navController: NavController, viewModel: LoginViewModel = hiltVi
                     focusedIndicatorColor = Color.Transparent,
                     unfocusedIndicatorColor = Color.Transparent,
                 ),
-                textStyle = TextStyle(fontFamily = fonts4, color = Color.Black)
-
+                textStyle = TextStyle(fontFamily = fonts4, color = Color.Black),
+                placeholder = {
+                    Text("Пароль", fontFamily = fonts4, color = Color.Black.copy(alpha = 0.5f), modifier = Modifier.padding(start = 20.dp))
+                }
             )
-
-//            Text(
-//                "Забыли пароль?", fontSize = 11.sp,
-//                fontFamily = fonts,
-//                color = Color(0xFFF7F4F1)
-//            )
             Button(
                 onClick = {
                     viewModel.onEvent(LoginEvents.OnLoginClick)

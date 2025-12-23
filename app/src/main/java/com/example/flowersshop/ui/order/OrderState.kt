@@ -1,7 +1,6 @@
 package com.example.flowersshop.ui.order
 
-import com.example.flowersshop.domain.model.CartModel
-import com.example.flowersshop.ui.pages.cart.CartItem
+import com.example.flowersshop.ui.cart.CartItem
 
 data class OrderState(
     val payment: String = "При получении",
@@ -13,6 +12,8 @@ data class OrderState(
     val products: List<CartItem> = emptyList(),
     val isLoading: Boolean = true,
     val totalCoast: Long = 200,
-    val isSuccess: Boolean = false
+    val isSuccess: Boolean = false,
+    val isError: Boolean = false,
+    val errorMessage: String = ""
 )
 

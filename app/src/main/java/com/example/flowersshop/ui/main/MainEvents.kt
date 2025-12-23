@@ -1,4 +1,4 @@
-package com.example.flowersshop.ui.pages.main
+package com.example.flowersshop.ui.main
 
 interface MainEvents {
     data class OnCategoryChange(val value: String): MainEvents

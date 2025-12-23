@@ -1,4 +1,4 @@
-package com.example.flowersshop.ui.bouquet
+package com.example.flowersshop.ui.bouquet_card
 
 import android.widget.Toast
 import androidx.activity.compose.BackHandler
@@ -22,7 +22,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
