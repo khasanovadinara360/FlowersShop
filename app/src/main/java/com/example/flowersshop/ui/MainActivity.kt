@@ -90,7 +90,7 @@ class MainActivity : ComponentActivity() {
                 ) { innerPadding ->
                     NavHost(
                         navController = navController,
-                        startDestination = Route.Main.route,
+                        startDestination = Route.Splash.route,
                         modifier = Modifier.Companion
                             .padding(innerPadding)
                     ) {

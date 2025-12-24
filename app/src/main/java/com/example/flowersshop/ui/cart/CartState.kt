@@ -6,7 +6,7 @@ data class CartState(
     val totalCoast: Long = 0,
     val products: List<CartItem> = emptyList(),
     val isLoading: Boolean = true,
-    val isError: Boolean = true,
+    val isError: Boolean = false,
     val isSuccess: Boolean = false,
     val errorMessage: String = ""
 

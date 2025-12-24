@@ -1,6 +1,7 @@
 package com.example.flowersshop.ui.splash
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
@@ -45,7 +46,8 @@ fun SplashScreen(navController: NavController, viewModel: SplashViewModel = hilt
         Column(
             modifier = Modifier
                 .align(Alignment.Center)
-                .width(IntrinsicSize.Max),
+                .width(IntrinsicSize.Max)
+                ,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Image(
@@ -53,7 +55,9 @@ fun SplashScreen(navController: NavController, viewModel: SplashViewModel = hilt
                 "flower",
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 25.dp),
+                    .padding(horizontal = 25.dp).clickable{
+                        navController.navigate(Route.Onb.route)
+                    },
                 contentScale = ContentScale.FillWidth
             )
             Text(

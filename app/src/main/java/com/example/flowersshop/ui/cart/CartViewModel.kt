@@ -199,13 +199,16 @@ class CartViewModel @Inject constructor(
                 }
             }
             CartEvents.OrderClick -> {
-//                if (_state.value.products.isEmpty()) {
+                if (_state.value.products.isEmpty()) {
                     _state.value = _state.value.copy(
                         errorMessage = "Корзина пуста",
-                        isError = _state.value.products.isEmpty(),
-                        isSuccess = !_state.value.isError
+                        isError = true
                     )
-//                }
+                } else {
+                    _state.value = _state.value.copy(
+                        isSuccess = true
+                    )
+                }
             }
             CartEvents.DismissClick -> {
                 _state.value = _state.value.copy(
